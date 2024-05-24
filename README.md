@@ -7,7 +7,7 @@ Assemble is designed to assist students in managing the complexities of universi
 The application targets post-secondary students, who can benefit the most from efficient note-taking, productive study habits, and a robust to-do list for tracking deadlines. However, Assemble can also be useful for others not currently in formal education to organize their life using our to-do list feature or the timer feature, but the main target audience for our app are students.
 Currently, students use various separate applications to maintain their notes, calendars, and flashcards, leading to a fragmented and inconsistent study process. Not only does it lead to these issues, it also causes an overload of information in learning different user interfaces and  knowing each application’s capabilities. Assemble aims to resolve this by seamlessly integrating all these key components into one platform. This integration will promote more productive studying and ensure students never miss a deadline.
 
-# Market Value:
+# Why is it valuable?
 Furthermore, Assemble addresses this problem by consolidating task management and information organization into a single unified interface, enhancing learning efficiency and time management. By integrating these features, Assemble not only reduces the cognitive load associated with juggling multiple tools but also provides a cohesive and streamlined user experience. This allows students to focus more on learning and less on administrative tasks, ultimately improving their academic performance and reducing stress in the long run.
 
 # How It Would Work:
