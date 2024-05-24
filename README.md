@@ -1,4 +1,4 @@
-# Assemble Vision Statement
+## Assemble Vision Statement
 
 # Summary Sentence:
 Assemble is a one-stop mobile application that helps post-secondary students manage their study and life tasks by integrating note-taking, study tools, and to-do lists for optimal ease of use in academics.
