@@ -29,26 +29,17 @@ public class LoginActivity extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
+                // For now, just display bullshit
+                User testUser = new User(1, "laraib","sike");
+                UserDao.createUser(testUser);
+                User user = UserDao.getUserByUsername(username);
+                // user is null
+                if (user != null && user.getPassword().equals(password)) {
+                    System.out.println("Login successful!");
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login attempt with Username: " + username + " and Password: " + password, Toast.LENGTH_SHORT).show();
+                    System.out.println("Invalid username or password.");
                 }
             }
         });
     }
-//    loginButton.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            String username = usernameEditText.getText().toString();
-//            String password = passwordEditText.getText().toString();
-//
-//            // For now, just display bullshit
-//            if (!username.isEmpty() && !password.isEmpty()) {
-//                new LoginTask().execute(username, password);
-//            } else {
-//                Toast.makeText(LoginActivity.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    });
 }
