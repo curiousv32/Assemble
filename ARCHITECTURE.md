@@ -1,0 +1,5 @@
+Create an ARCHITECTURE.md file that describes the architecture of your application. Identify the packages and major source code files in your repository. Sketch out the overall architecture of your system broadly. If you want, you can use a tool like asciiflow or Mermaid for text purity in your ARCHITECTURE.md file, or you may create an architecture diagram as an image (.png, .jpg, .svg). Note that GitLab can render Mermaid diagrams!
+
+At the end of the iteration, move any incomplete feature and user story issues from your iteration 1 milestone into a new milestone for iteration 2. Features and user stories that are still in the iteration 1 milestone at the end of the iteration will be assumed to be complete, and will be assessed as such.
+
+During development, record the time you actually spent on a user story in the corresponding GitLab issue to help you and your team assess how good your time estimates actually are.
