@@ -26,14 +26,10 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+                String password = "sike";
 
                 // For now, just display bullshit
-                User testUser = new User(1, "laraib","sike");
-                UserDao.createUser(testUser);
-                User user = UserDao.getUserByUsername(username);
-                // user is null
+                User user = new User(1, "laraib","sike");
                 if (user != null && user.getPassword().equals(password)) {
                     System.out.println("Login successful!");
                 } else {
