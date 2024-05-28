@@ -12,6 +12,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
+    // we can have a list of users for now
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +27,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = "sike";
+                String password = passwordEditText.getText().toString();
 
-                // For now, just display bullshit
                 User user = new User(1, "laraib","sike");
                 if (user != null && user.getPassword().equals(password)) {
                     System.out.println("Login successful!");
