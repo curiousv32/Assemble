@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
-        Button signUpButton = findViewById(R.id.signUpButton);
+        Button signUpButton = findViewById(R.id.signup_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,16 +45,11 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // onClick user should be taken to a different page and asked for the following:
-                // user name
-                // password
-                // retype password for confirmation
-                /* after the user has entered their data, there should be a register button
-                 that adds the user data to the List i have setup above*/
+                setContentView(R.layout.activity_signup);
             }
         });
     }
-    // can move this to a better place
+    // can move this to a better place, thinking of creating a userManager class
     private User findUser(String userName){
         User curr = null;
         for(int i = 0; i < users.size(); i++) {
