@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    // this is just for android studio to recognize the .jar file
     implementation(files("libs/hsqldb.jar"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)

@@ -5,6 +5,7 @@ import java.sql.Statement;
 
 public class Db {
     public static void main(String[] args) {
+        // We dont need this for now
         // to run database java -cp ../lib/hsqldb.jar org.hsqldb.Server -database.0 file:studydb -dbname.0 studydb
         try (Connection conn = DatabaseUtil.getConnection();
              Statement stmt = conn.createStatement()) {

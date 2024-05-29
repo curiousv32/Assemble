@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseUtil {
+    // We dont need this for now
     private static final String JDBC_URL = "jdbc:hsqldb:hsql://10.0.2.2/studydb"; // Using 10.0.2.2 for Android Emulator
     private static final String JDBC_USER = "SA";
     private static final String JDBC_PASSWORD = "";
