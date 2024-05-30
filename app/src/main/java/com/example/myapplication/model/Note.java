@@ -9,12 +9,10 @@ public class Note {
     private String name;
     private Date creationDate;
     private Date lastUpdatedDate;
-    private String ownerID;
     private String text;
 
-    public Note(UUID noteUUID, String ownerID, String name) {
+    public Note(UUID noteUUID, String name) {
         this.noteUUID = noteUUID;
-        this.ownerID = ownerID;
         this.name = name;
     }
 

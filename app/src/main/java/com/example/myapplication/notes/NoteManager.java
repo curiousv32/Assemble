@@ -20,17 +20,17 @@ public class NoteManager {
         // TODO: Random data for now, in the future init() will load all data from the database for that specific user.
         UUID uuid = UUID.randomUUID();
 
-        notesTemp.put(uuid, new Note(uuid, ownerUUID, "blank for now"));
+        notesTemp.put(uuid, new Note(uuid, "blank for now"));
 
         return notesTemp;
     }
 
-    public void create(String ownerUUID, String name) throws InvalidNote {
+    public void create(String name) throws InvalidNote {
         if (contains(name)) {
             throw new InvalidNote("Note name \"" + name + "\" already exists");
         } else {
             UUID noteUUID = UUID.randomUUID();
-            notes.put(noteUUID, new Note(noteUUID, ownerUUID, name));
+            notes.put(noteUUID, new Note(noteUUID, name));
             // TODO: Insert into database and redirect to note page.
 
         }
