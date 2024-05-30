@@ -32,7 +32,6 @@ public class NoteManager {
             UUID noteUUID = UUID.randomUUID();
             notes.put(noteUUID, new Note(noteUUID, name));
             // TODO: Insert into database and redirect to note page.
-
         }
     }
 
