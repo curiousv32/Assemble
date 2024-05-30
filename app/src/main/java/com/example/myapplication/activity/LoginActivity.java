@@ -1,18 +1,22 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.R;
+import com.example.myapplication.model.User;
+import com.example.myapplication.util.SharedPreferencesManager;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
+    private SharedPreferencesManager sharedPreferencesManager;
     private List<User> users = new ArrayList<User>();
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -21,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // remember to change this to activity_login.xml and change the filename of activity_main to activity_login
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         User testUser = new User(1, "john", "doe");
         users.add(testUser);
         usernameEditText = findViewById(R.id.username);
@@ -42,11 +46,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setContentView(R.layout.activity_signup);
-            }
+        signUpButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
         });
     }
     // can move this to a better place, thinking of creating a userManager class
