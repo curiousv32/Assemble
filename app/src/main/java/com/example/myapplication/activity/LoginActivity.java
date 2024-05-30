@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,41 +25,39 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // remember to change this to activity_login.xml and change the filename of activity_main to activity_login
         setContentView(R.layout.activity_login);
-        User testUser = new User(1, "john", "doe");
-        users.add(testUser);
+
+        sharedPreferencesManager = new SharedPreferencesManager(this);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
         Button signUpButton = findViewById(R.id.signup_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userName = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                // implement the getUser function
-                User currUser = findUser(userName);
-                if (currUser != null && currUser.getPassword().equals(password)) {
-                    System.out.println("Login successful!");
-                } else {
-                    System.out.println("Invalid username or password.");
-                }
+
+        loginButton.setOnClickListener(v -> {
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+
+            if (validateLogin(username, password)) {
+                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                //Todo: Redirect to the home page
+                //Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                //startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
-        });
-        signUpButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-            startActivity(intent);
         });
     }
-    // can move this to a better place, thinking of creating a userManager class
-    private User findUser(String userName){
-        User curr = null;
-        for(int i = 0; i < users.size(); i++) {
-            if(users.get(i).getUsername().equals(userName)){
-                curr = users.get(i);
-            }
-        }
-        return curr;
+
+    private boolean validateLogin(String username, String password) {
+        String storedUsername = sharedPreferencesManager.getUsername();
+        String storedPassword = sharedPreferencesManager.getPassword();
+
+        return username.equals(storedUsername) && password.equals(storedPassword);
+    }
+
+    public void onRegisterClick(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 }
