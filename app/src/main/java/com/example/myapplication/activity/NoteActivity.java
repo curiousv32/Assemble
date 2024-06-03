@@ -1,7 +1,9 @@
 package com.example.myapplication.activity;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +22,11 @@ public class NoteActivity extends AppCompatActivity {
         Button goBackButton = findViewById(R.id.notes_go_back);
         TextView textContents = findViewById(R.id.note_contents);
 
+        textContents.setText("".toCharArray(), 0, 0);
+        textContents.requestFocus();
+
         goBackButton.setOnClickListener(v -> {
-            System.out.println("contents: " + textContents.getText());
+            Log.d("NoteActivity", "contents: " + textContents.getText().toString());
             //Intent intent = new Intent(null, HomePageActivity.class);
             //startActivity(intent);
 
