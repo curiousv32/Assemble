@@ -1,6 +1,6 @@
 package com.example.myapplication.notes;
 
-import com.example.myapplication.exceptions.InvalidNote;
+import com.example.myapplication.exceptions.InvalidNoteException;
 import com.example.myapplication.model.Note;
 
 import java.util.HashMap;
@@ -10,24 +10,20 @@ public class NoteManager {
 
     private HashMap<UUID, Note> notes;
 
-    public NoteManager(String ownerUUID) {
-        this.notes = init(ownerUUID);
-    }
-
-    private HashMap<UUID, Note> init(String ownerUUID) {
-        HashMap<UUID, Note> notesTemp = new HashMap<>();
+    public HashMap<UUID, Note> init(String ownerUUID) {
+        notes = new HashMap<>();
 
         // TODO: Random data for now, in the future init() will load all data from the database for that specific user.
-        UUID uuid = UUID.randomUUID();
+        //UUID uuid = UUID.randomUUID();
 
-        notesTemp.put(uuid, new Note(uuid, "blank for now"));
+        //notes.put(uuid, new Note(uuid, "blank for now"));
 
-        return notesTemp;
+        return notes;
     }
 
-    public void create(String name) throws InvalidNote {
+    public void create(String name) throws InvalidNoteException {
         if (contains(name)) {
-            throw new InvalidNote("Note name \"" + name + "\" already exists");
+            throw new InvalidNoteException("Note name \"" + name + "\" already exists");
         } else {
             UUID noteUUID = UUID.randomUUID();
             notes.put(noteUUID, new Note(noteUUID, name));
