@@ -45,13 +45,13 @@ public class NoteManagerTest {
     public void create_succeeded() {
         HashMap<UUID, Note> notes = noteManager.init("");
 
-        Assert.assertEquals(notes.size(), 0);
+        assertEquals(notes.size(), 0);
 
         try {
             noteManager.create("test");
         } catch (InvalidNoteException exception) {
-            //
+            Assert.fail("Assertion failed on note creation test: create_succeeded()");
         }
-        Assert.assertEquals(notes.size(), 1);
+        assertEquals(notes.size(), 1);
     }
 }
