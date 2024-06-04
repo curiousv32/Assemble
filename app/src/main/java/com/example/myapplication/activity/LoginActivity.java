@@ -38,11 +38,8 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             if (validateLogin(username, password)) {
-                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                //Todo: Redirect to the home page
-                //Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                //startActivity(intent);
-                finish();
+                Intent intent = new Intent(this, HomePageActivity.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
