@@ -2,6 +2,8 @@
     <string name="app_name">My Application</string>
     <string name="sign_up">Sign Up</string>
     <string name="log_in">Log In</string>
+    <string name="go_back">Go Back</string>
+    <string name="note_contents">Type your note here</string>
     <string name="welcome_message">WELCOME!</string>
     <string name="note_button">Notes</string>
     <string name="list_button">To-do list</string>
