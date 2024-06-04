@@ -28,6 +28,8 @@ public class Note {
         this.text = text;
     }
 
+    public String getText() { return text; }
+
     public String getName() {
         return this.name;
     }
