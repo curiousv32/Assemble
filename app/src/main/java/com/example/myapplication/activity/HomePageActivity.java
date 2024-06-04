@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.example.myapplication.notes.NoteManager;
 import com.example.myapplication.util.SharedPreferencesManager;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -27,29 +28,19 @@ public class HomePageActivity extends AppCompatActivity {
         Button flashcardButton = findViewById(R.id.button3);
 
         // Set click listeners for buttons
-        noteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Todo: Implement your logic here when the note button is clicked
-                // For example, you could open a new activity for notes
-                Toast.makeText(HomePageActivity.this, "Note Button Clicked", Toast.LENGTH_SHORT).show();
-            }
+        noteButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NoteActivity.class);
+            startActivity(intent);
         });
 
-        listButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Todo: Implement your logic here when the list button is clicked
-                Toast.makeText(HomePageActivity.this, "List Button Clicked", Toast.LENGTH_SHORT).show();
-            }
+        listButton.setOnClickListener(v -> {
+            //Todo: Implement your logic here when the list button is clicked
+            Toast.makeText(HomePageActivity.this, "List Button Clicked", Toast.LENGTH_SHORT).show();
         });
 
-        flashcardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Todo: Implement your logic here when the flashcard button is clicked
-                Toast.makeText(HomePageActivity.this, "Flashcard Button Clicked", Toast.LENGTH_SHORT).show();
-            }
+        flashcardButton.setOnClickListener(v -> {
+            //Todo: Implement your logic here when the flashcard button is clicked
+            Toast.makeText(HomePageActivity.this, "Flashcard Button Clicked", Toast.LENGTH_SHORT).show();
         });
 
     }

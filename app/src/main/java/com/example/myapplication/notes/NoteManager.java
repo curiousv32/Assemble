@@ -4,9 +4,16 @@ import com.example.myapplication.exceptions.InvalidNoteException;
 import com.example.myapplication.model.Note;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NoteManager {
+
+    private static final NoteManager reference = new NoteManager();
+
+    public static NoteManager getInstance() {
+        return reference;
+    }
 
     private HashMap<UUID, Note> notes;
 
@@ -21,14 +28,17 @@ public class NoteManager {
         return notes;
     }
 
-    public void create(String name) throws InvalidNoteException {
+    public Note create(String name) throws InvalidNoteException {
+        Note note;
+
         if (contains(name)) {
             throw new InvalidNoteException("Note name \"" + name + "\" already exists");
         } else {
             UUID noteUUID = UUID.randomUUID();
-            notes.put(noteUUID, new Note(noteUUID, name));
-            // TODO: Insert into database and redirect to note page.
+            note = new Note(noteUUID, name);
+            notes.put(noteUUID, note);
         }
+        return note;
     }
 
     public void save(Note note, String text) {
@@ -37,6 +47,12 @@ public class NoteManager {
 
     public Note getNote(UUID uuid) {
         return notes.get(uuid);
+    }
+
+    public Note getNoteByName(String name) {
+        return notes.values().stream()
+                .filter(note -> note.getName().equals(name))
+                .findFirst().orElse(null);
     }
 
     public boolean contains(String noteName) {

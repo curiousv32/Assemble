@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.example.myapplication.notes.NoteManager;
 import com.example.myapplication.util.SharedPreferencesManager;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
-        Button signUpButton = findViewById(R.id.signup_button);
 
         loginButton.setOnClickListener(v -> {
             String username = usernameEditText.getText().toString();
@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             if (validateLogin(username, password)) {
                 Intent intent = new Intent(this, HomePageActivity.class);
                 startActivity(intent);
+                NoteManager.getInstance().init("");
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }

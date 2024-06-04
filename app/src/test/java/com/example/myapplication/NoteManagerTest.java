@@ -51,7 +51,8 @@ public class NoteManagerTest {
         assertEquals(notes.size(), 0);
 
         try {
-            noteManager.create("test");
+            Note note = noteManager.create("test");
+            assertNotNull(note);
         } catch (InvalidNoteException exception) {
             Assert.fail("Assertion failed on note creation test: create_succeeded()");
         }
@@ -92,6 +93,27 @@ public class NoteManagerTest {
 
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.getNote(randomUUID);
+
+        assertNull(note);
+    }
+
+    @Test
+    public void getNoteByName_succeed() {
+        HashMap<UUID, Note> notes = noteManager.init("");
+
+        UUID randomUUID = UUID.randomUUID();
+        notes.put(randomUUID, new Note(randomUUID, "test"));
+
+        Note note = noteManager.getNoteByName("test");
+
+        assertNotNull(note);
+    }
+
+    @Test
+    public void getNoteByName_invalid() {
+        noteManager.init("");
+
+        Note note = noteManager.getNoteByName("test");
 
         assertNull(note);
     }
