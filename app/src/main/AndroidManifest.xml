@@ -29,6 +29,10 @@
             android:name=".activity.NoteActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".activity.HomePageActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
