@@ -22,8 +22,4 @@ public class DatabaseManager {
     public List<Note> getUserNotes(String ownerUUID) {
         return stubNote;
     }
-
-    public void updateUserNote(Note note, String newText) {
-        stubNote.get(0).setText(newText);
-    }
 }
