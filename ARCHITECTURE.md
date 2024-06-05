@@ -61,7 +61,6 @@ The Assemble application follows a layered architecture with the following compo
 
 **Here's a sketch of the overall architecture of the Assemble application using Mermaid syntax:**
 
-```mermaid
 graph LR
     A[User Interface (Activities)] --> B{User Interaction}
     B --> C{Data Model (model package)}
@@ -69,5 +68,5 @@ graph LR
     C -->|Persists?| E[Remote Server (optional)]
     B --> F[Utility Functions (util package)]
     F --> C
-```
+
 
