@@ -1,9 +1,11 @@
 package com.example.myapplication.notes;
 
+import com.example.myapplication.database.DatabaseManager;
 import com.example.myapplication.exceptions.InvalidNoteException;
 import com.example.myapplication.model.Note;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,13 +19,14 @@ public class NoteManager {
 
     private HashMap<UUID, Note> notes;
 
+    public NoteManager() {
+        this.notes = new HashMap<>();
+    }
+
     public HashMap<UUID, Note> init(String ownerUUID) {
-        notes = new HashMap<>();
 
-        // TODO: Random data for now, in the future init() will load all data from the database for that specific user.
-        //UUID uuid = UUID.randomUUID();
-
-        //notes.put(uuid, new Note(uuid, "blank for now"));
+        List<Note> notesList = DatabaseManager.getInstance().getUserNotes(ownerUUID);
+        notesList.forEach(noteItem -> notes.put(noteItem.getID(), noteItem));
 
         return notes;
     }
@@ -57,5 +60,9 @@ public class NoteManager {
 
     public boolean contains(String noteName) {
         return notes.values().stream().anyMatch(note -> note.getName().equals(noteName));
+    }
+
+    public int getNotesSize() {
+        return notes.size();
     }
 }

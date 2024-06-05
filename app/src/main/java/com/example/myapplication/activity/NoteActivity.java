@@ -11,9 +11,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.database.DatabaseManager;
 import com.example.myapplication.exceptions.InvalidNoteException;
 import com.example.myapplication.model.Note;
 import com.example.myapplication.notes.NoteManager;
+import com.example.myapplication.util.SharedPreferencesManager;
+
+import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -22,11 +26,11 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_page);
 
-        NoteManager manager = NoteManager.getInstance();
-
+        NoteManager noteManager = NoteManager.getInstance();
         Note foundNote = null;
-        if (manager.contains("test")) {
-            foundNote = manager.getNoteByName("test");
+
+        if (noteManager.contains("stub")) {
+            foundNote = noteManager.getNoteByName("stub");
         }
 
         Button goBackButton = findViewById(R.id.notes_go_back);
@@ -37,7 +41,7 @@ public class NoteActivity extends AppCompatActivity {
         } else {
             textContents.setText("".toCharArray(), 0, 0);
             try {
-                foundNote = manager.create("test");
+                foundNote = noteManager.create("stub");
             } catch (InvalidNoteException e) {
                 throw new RuntimeException(e);
             }
@@ -49,7 +53,7 @@ public class NoteActivity extends AppCompatActivity {
         goBackButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, HomePageActivity.class);
             startActivity(intent);
-            manager.save(finalFoundNote, textContents.getText().toString());
+            noteManager.save(finalFoundNote, textContents.getText().toString());
 
             Toast.makeText(this, "Returned to Home Page", Toast.LENGTH_SHORT).show();
         });

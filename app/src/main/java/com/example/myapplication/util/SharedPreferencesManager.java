@@ -30,6 +30,10 @@ public class SharedPreferencesManager {
         editor.apply();
     }
 
+    public String getID() {
+        return sharedPreferences.getString("id", "");
+    }
+
     public String getUsername() {
         return sharedPreferences.getString("username", null);
     }

@@ -26,13 +26,18 @@ public class Note {
 
     public void setText(String text) {
         this.text = text;
+        setLastUpdatedDate();
     }
 
-    public String getText() { return text; }
+    public UUID getID() { return noteUUID; }
+
+    public String getText() { return text == null ? "" : text; }
 
     public String getName() {
         return this.name;
     }
+
+    public Date getLastUpdatedDate() { return lastUpdatedDate; }
 
     public boolean equals(Note other) {
         return noteUUID.toString().equals(other.noteUUID.toString());
