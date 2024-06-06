@@ -1,10 +1,10 @@
-package com.example.myapplication;
+package com.example.assemble;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.myapplication.model.User;
-import com.example.myapplication.util.SharedPreferencesManager;
+import com.example.assemble.model.User;
+import com.example.assemble.util.SharedPreferencesManager;
 
 import org.junit.Before;
 import org.junit.Test;

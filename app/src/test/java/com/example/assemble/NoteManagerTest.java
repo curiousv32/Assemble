@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.assemble;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,9 +7,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import com.example.myapplication.exceptions.InvalidNoteException;
-import com.example.myapplication.model.Note;
-import com.example.myapplication.notes.NoteManager;
+import com.example.assemble.exceptions.InvalidNoteException;
+import com.example.assemble.model.Note;
+import com.example.assemble.notes.NoteManager;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,12 +1,11 @@
-package com.example.myapplication.notes;
+package com.example.assemble.notes;
 
-import com.example.myapplication.database.DatabaseManager;
-import com.example.myapplication.exceptions.InvalidNoteException;
-import com.example.myapplication.model.Note;
+import com.example.assemble.database.DatabaseManager;
+import com.example.assemble.exceptions.InvalidNoteException;
+import com.example.assemble.model.Note;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class NoteManager {

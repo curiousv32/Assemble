@@ -1,4 +1,4 @@
-package com.example.myapplication.model;
+package com.example.assemble.model;
 
 import java.util.Date;
 import java.util.UUID;
