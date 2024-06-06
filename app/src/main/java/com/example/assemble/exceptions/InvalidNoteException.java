@@ -1,4 +1,4 @@
-package com.example.myapplication.exceptions;
+package com.example.assemble.exceptions;
 
 public class InvalidNoteException extends Exception {
 

@@ -1,8 +1,8 @@
-package com.example.myapplication.util;
+package com.example.assemble.util;
 
 import android.content.SharedPreferences;
 import android.content.Context;
-import com.example.myapplication.model.User;
+import com.example.assemble.model.User;
 
 import java.util.UUID;
 

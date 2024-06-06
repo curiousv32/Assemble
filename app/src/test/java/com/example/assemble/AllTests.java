@@ -1,8 +1,7 @@
-package com.example.myapplication;
+package com.example.assemble;
 
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;

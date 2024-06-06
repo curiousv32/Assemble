@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Assemble</string>
     <string name="sign_up">Sign Up</string>
     <string name="log_in">Log In</string>
     <string name="go_back">Go Back</string>

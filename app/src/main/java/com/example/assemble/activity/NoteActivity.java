@@ -1,23 +1,17 @@
-package com.example.myapplication.activity;
+package com.example.assemble.activity;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
-import com.example.myapplication.database.DatabaseManager;
-import com.example.myapplication.exceptions.InvalidNoteException;
-import com.example.myapplication.model.Note;
-import com.example.myapplication.notes.NoteManager;
-import com.example.myapplication.util.SharedPreferencesManager;
-
-import java.util.List;
+import com.example.assemble.R;
+import com.example.assemble.exceptions.InvalidNoteException;
+import com.example.assemble.model.Note;
+import com.example.assemble.notes.NoteManager;
 
 public class NoteActivity extends AppCompatActivity {
 

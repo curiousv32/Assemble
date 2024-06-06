@@ -1,11 +1,11 @@
-package com.example.myapplication;
+package com.example.assemble;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.example.myapplication.model.Note;
+import com.example.assemble.model.Note;
 
 import org.junit.Before;
 import org.junit.Test;

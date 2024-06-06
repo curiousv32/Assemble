@@ -1,19 +1,14 @@
-package com.example.myapplication.activity;
+package com.example.assemble.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
-import com.example.myapplication.model.User;
-import com.example.myapplication.notes.NoteManager;
-import com.example.myapplication.util.SharedPreferencesManager;
+import com.example.assemble.R;
 
 public class HomePageActivity extends AppCompatActivity {
 
