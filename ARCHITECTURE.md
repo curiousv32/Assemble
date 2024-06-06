@@ -17,6 +17,7 @@ The main source code for the Assemble application resides within the following p
     * `HomePageActivity.java`: Entry point of the application after successful login or launch. This activity displays the initial screen and presents essential options or features to the user. It might also handle user interactions to navigate to other activities within the application (depending on the overall design).
     * `LoginPageActivity.java`: Manages the user login process. It likely includes UI elements for entering login credentials, handling authentication logic, and displaying error or success messages based on the login attempt. Optionally, it might provide functionality for password recovery or account creation.
     * `SignUpActivity.java`: Handles user registration or account creation. It likely presents UI elements for entering user information, handling user registration logic, and displaying error or success messages based on the registration attempt. It might also provide options for selecting user preferences or account settings.
+    * `NoteActivity.java`: Handles the page when a user opens a  new note. It presents a big text area to input the note, with the ability to switch between notes and go back to the home page.
 
 **Model Package:**
 
