@@ -1,9 +1,8 @@
-package com.example.myapplication.database;
+package com.example.assemble.database;
 
-import com.example.myapplication.model.Note;
+import com.example.assemble.model.Note;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 

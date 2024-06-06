@@ -1,4 +1,4 @@
-package com.example.myapplication.activity;
+package com.example.assemble.activity;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
-import com.example.myapplication.util.SharedPreferencesManager;
+import com.example.assemble.R;
+import com.example.assemble.util.SharedPreferencesManager;
 
 public class SignUpActivity extends AppCompatActivity {
     private SharedPreferencesManager sharedPreferencesManager;
