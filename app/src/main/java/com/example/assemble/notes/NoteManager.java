@@ -39,6 +39,7 @@ public class NoteManager {
             UUID noteUUID = UUID.randomUUID();
             note = new Note(noteUUID, name);
             notes.put(noteUUID, note);
+            note.setCreationDate();
         }
         return note;
     }

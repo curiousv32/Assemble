@@ -2,7 +2,8 @@ package com.example.assemble.util;
 
 import android.content.SharedPreferences;
 import android.content.Context;
-import com.example.assemble.model.User;
+
+import com.example.assemble.database.DatabaseManager;
 
 import java.util.UUID;
 
@@ -12,13 +13,6 @@ public class SharedPreferencesManager {
 
     public SharedPreferencesManager(Context context) {
         this.sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-    }
-
-    public User getUser() {
-        String id = sharedPreferences.getString("id", ""); // empty string if not found
-        String username = sharedPreferences.getString("username", null);
-        String password = sharedPreferences.getString("password", null);
-        return new User(id, username, password);
     }
 
     public void saveNewUser(String username, String password) {
@@ -35,10 +29,10 @@ public class SharedPreferencesManager {
     }
 
     public String getUsername() {
-        return sharedPreferences.getString("username", null);
+        return sharedPreferences.getString("username", DatabaseManager.STUB_USER);
     }
 
     public String getPassword() {
-        return sharedPreferences.getString("password", null);
+        return sharedPreferences.getString("password", DatabaseManager.STUB_PASSWORD);
     }
 }

@@ -5,15 +5,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.assemble.R;
 import com.example.assemble.notes.NoteManager;
 import com.example.assemble.util.SharedPreferencesManager;
 
 public class LoginActivity extends AppCompatActivity {
+
     private SharedPreferencesManager sharedPreferencesManager;
     private EditText usernameEditText;
     private EditText passwordEditText;

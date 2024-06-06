@@ -8,9 +8,14 @@ import java.util.UUID;
 
 public class DatabaseManager {
 
+    public static final String STUB_NOTE_NAME = "stub";
+
     private List<Note> stubNote = new ArrayList<Note>() {{
-        add(new Note(UUID.randomUUID(), "stub"));
+        add(new Note(UUID.randomUUID(), STUB_NOTE_NAME));
     }};
+
+    public static final String STUB_USER = "admin";
+    public static final String STUB_PASSWORD = "admin";
 
     private static DatabaseManager reference = new DatabaseManager();
 

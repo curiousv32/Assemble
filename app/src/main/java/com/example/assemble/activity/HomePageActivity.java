@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.assemble.R;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -29,13 +26,11 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         listButton.setOnClickListener(v -> {
-            //Todo: Implement your logic here when the list button is clicked
-            Toast.makeText(HomePageActivity.this, "List Button Clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
 
         flashcardButton.setOnClickListener(v -> {
-            //Todo: Implement your logic here when the flashcard button is clicked
-            Toast.makeText(HomePageActivity.this, "Flashcard Button Clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
 
     }
