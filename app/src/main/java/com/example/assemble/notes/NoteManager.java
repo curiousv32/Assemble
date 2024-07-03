@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class NoteManager {
 
-    private static final NoteManager reference = new NoteManager();
+    private static final NoteManager REFERENCE = new NoteManager();
 
     public static NoteManager getInstance() {
-        return reference;
+        return REFERENCE;
     }
 
     private HashMap<UUID, Note> notes;

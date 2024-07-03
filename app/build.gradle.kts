@@ -39,8 +39,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    // this is just for android studio to recognize the .jar file
-    implementation(files("libs/hsqldb.jar"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
@@ -52,4 +50,6 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.androidx.core.v120)
+    // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
+    testImplementation(group = "org.hsqldb", name = "hsqldb", version = "2.7.3")
 }
