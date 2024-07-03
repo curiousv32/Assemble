@@ -4,7 +4,7 @@
     <string name="log_in">Log In</string>
     <string name="go_back">Go Back</string>
     <string name="note_contents">Type your note here</string>
-    <string name="welcome_message">WELCOME!</string>
+    <string name="welcome_message">WELCOME! %1$s</string>
     <string name="note_button">Notes</string>
     <string name="list_button">To-do list</string>
     <string name="flashcard_button">Flashcards</string>
