@@ -7,20 +7,15 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
-import com.example.assemble.util.SharedPreferencesManager;
 
 public class HomePageActivity extends AppCompatActivity {
 
-    private SharedPreferencesManager sharedPreferencesManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
 
-        sharedPreferencesManager = new SharedPreferencesManager(this);
-
-        // Get the user's name from SharedPreferences
-        String userName = sharedPreferencesManager.getUsername();
+        String userName = getIntent().getStringExtra("USER_NAME");
 
         // Find the welcome TextView and update it with the user's name
         TextView welcomeTextView = findViewById(R.id.textView3);

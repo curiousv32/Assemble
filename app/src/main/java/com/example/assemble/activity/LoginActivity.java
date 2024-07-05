@@ -31,9 +31,6 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             if (validateLogin(username, password)) {
-                // Save the username in SharedPreferences
-                sharedPreferencesManager.saveNewUser(username, password);
-
                 Intent intent = new Intent(this, HomePageActivity.class);
                 intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
@@ -45,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validateLogin(String username, String password) {
-        String storedUsername = sharedPreferencesManager.getUsername();
-        String storedPassword = sharedPreferencesManager.getPassword();
+        String storedUsername = sharedPreferencesManager.getUsername(username);
+        String storedPassword = sharedPreferencesManager.getPassword(password);
 
         return username.equals(storedUsername) && password.equals(storedPassword);
     }

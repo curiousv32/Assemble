@@ -42,11 +42,14 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                sharedPreferencesManager.saveNewUser(username, password);
-                Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-
-                // redirect to the home page
-                finish();
+                if (sharedPreferencesManager.saveNewUser(username, password)) {
+                    Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Username already exists. Please try another one.", Toast.LENGTH_LONG).show();
+                    usernameEditText.setText("");
+                    usernameEditText.requestFocus();
+                }
             } else {
                 Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             }
