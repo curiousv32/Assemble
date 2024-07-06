@@ -1,5 +1,6 @@
 package com.example.assemble.notes;
 
+import android.content.Context;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.model.Note;
@@ -10,36 +11,36 @@ import java.util.UUID;
 
 public class NoteManager {
 
-    private static final NoteManager reference = new NoteManager();
-
-    public static NoteManager getInstance() {
-        return reference;
-    }
-
+    private static NoteManager REFERENCE;
+    private DatabaseManager dbManager;
     private HashMap<UUID, Note> notes;
 
-    public NoteManager() {
+    private NoteManager(Context context) {
         this.notes = new HashMap<>();
+        this.dbManager = DatabaseManager.getInstance(context);
+    }
+
+    public static synchronized NoteManager getInstance(Context context) {
+        if (REFERENCE == null) {
+            REFERENCE = new NoteManager(context);
+        }
+        return REFERENCE;
     }
 
     public HashMap<UUID, Note> init(String ownerUUID) {
-
-        List<Note> notesList = DatabaseManager.getInstance().getUserNotes(ownerUUID);
+        List<Note> notesList = dbManager.getUserNotes(ownerUUID);
         notesList.forEach(noteItem -> notes.put(noteItem.getID(), noteItem));
-
         return notes;
     }
 
     public Note create(String name) throws InvalidNoteException {
-        Note note;
-
         if (contains(name)) {
             throw new InvalidNoteException("Note name \"" + name + "\" already exists");
-        } else {
-            UUID noteUUID = UUID.randomUUID();
-            note = new Note(noteUUID, name);
-            notes.put(noteUUID, note);
         }
+        UUID noteUUID = UUID.randomUUID();
+        Note note = new Note(noteUUID, name);
+        notes.put(noteUUID, note);
+        note.setCreationDate();
         return note;
     }
 
@@ -63,5 +64,9 @@ public class NoteManager {
 
     public int getNotesSize() {
         return notes.size();
+    }
+
+    public void clearNotes() {
+        notes.clear();
     }
 }

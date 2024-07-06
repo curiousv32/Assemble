@@ -2,7 +2,8 @@ package com.example.assemble.util;
 
 import android.content.SharedPreferences;
 import android.content.Context;
-import com.example.assemble.model.User;
+
+import com.example.assemble.database.DatabaseManager;
 
 import java.util.UUID;
 
@@ -14,31 +15,35 @@ public class SharedPreferencesManager {
         this.sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    public User getUser() {
-        String id = sharedPreferences.getString("id", ""); // empty string if not found
-        String username = sharedPreferences.getString("username", null);
-        String password = sharedPreferences.getString("password", null);
-        return new User(id, username, password);
-    }
+    public boolean saveNewUser(String username, String password) {
+        if (doesUsernameExist(username)) {
+            return false;
+        }
 
-    public void saveNewUser(String username, String password) {
         String newId = UUID.randomUUID().toString();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("id", newId);
-        editor.putString("username", username);
-        editor.putString("password", password);
+
+        //adding suffix to create unique key value pairs
+        editor.putString(username + "_id", newId);
+        editor.putString(username + "_username", username);
+        editor.putString(username + "_password", password);
         editor.apply();
+        return true;
     }
 
     public String getID() {
         return sharedPreferences.getString("id", "");
     }
 
-    public String getUsername() {
-        return sharedPreferences.getString("username", null);
+    public String getUsername(String username) {
+        return sharedPreferences.getString(username + "_username", DatabaseManager.STUB_USER);
     }
 
-    public String getPassword() {
-        return sharedPreferences.getString("password", null);
+    public String getPassword(String username) {
+        return sharedPreferences.getString(username + "_password", DatabaseManager.STUB_PASSWORD);
+    }
+
+    public boolean doesUsernameExist(String username) {
+        return sharedPreferences.contains(username + "_username");
     }
 }

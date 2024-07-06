@@ -1,13 +1,11 @@
 package com.example.assemble.activity;
 
 import android.content.Intent;
+import android.widget.TextView;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.assemble.R;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -16,6 +14,15 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
+
+        String userName = getIntent().getStringExtra("USER_NAME");
+
+        // Find the welcome TextView and update it with the user's name
+        TextView welcomeTextView = findViewById(R.id.textView3);
+        if (userName != null && !userName.isEmpty()) {
+            String welcomeMessage = getString(R.string.welcome_message, userName);
+            welcomeTextView.setText(welcomeMessage);
+        }
 
         // Find buttons by their IDs
         Button noteButton = findViewById(R.id.button);
@@ -29,13 +36,11 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         listButton.setOnClickListener(v -> {
-            //Todo: Implement your logic here when the list button is clicked
-            Toast.makeText(HomePageActivity.this, "List Button Clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
 
         flashcardButton.setOnClickListener(v -> {
-            //Todo: Implement your logic here when the flashcard button is clicked
-            Toast.makeText(HomePageActivity.this, "Flashcard Button Clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
 
     }

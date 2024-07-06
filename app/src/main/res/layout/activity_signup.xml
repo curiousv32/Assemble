@@ -5,43 +5,48 @@
     android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="768dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/form_background"
-        android:padding="24dp"
+        android:clipToOutline="true"
         android:elevation="8dp"
-        android:layout_margin="16dp"
-        android:clipToOutline="true">
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:textSize="24sp"
-            android:textColor="#fff"
             android:layout_gravity="center_horizontal"
-            android:paddingBottom="16dp"/>
+            android:paddingBottom="16dp"
+            android:text="Login"
+            android:textColor="#fff"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/input_background"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:hint="Username"
+            android:padding="12dp" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/input_background"
             android:hint="Password"
             android:inputType="textPassword"
-            android:background="@drawable/input_background"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:padding="12dp" />
 
         <EditText
             android:id="@+id/confirmPassword"
@@ -57,9 +62,9 @@
             android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register"
-            android:textColor="#FFFFFF"
             android:background="@drawable/button_background"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:text="Register"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 </RelativeLayout>

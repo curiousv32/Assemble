@@ -2,6 +2,7 @@ package com.example.assemble.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
+import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.model.Note;
 import com.example.assemble.notes.NoteManager;
@@ -20,11 +22,11 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_page);
 
-        NoteManager noteManager = NoteManager.getInstance();
+        NoteManager noteManager = NoteManager.getInstance(this);
         Note foundNote = null;
 
-        if (noteManager.contains("stub")) {
-            foundNote = noteManager.getNoteByName("stub");
+        if (noteManager.contains(DatabaseManager.STUB_NOTE_NAME)) {
+            foundNote = noteManager.getNoteByName(DatabaseManager.STUB_NOTE_NAME);
         }
 
         Button goBackButton = findViewById(R.id.notes_go_back);
@@ -35,9 +37,11 @@ public class NoteActivity extends AppCompatActivity {
         } else {
             textContents.setText("".toCharArray(), 0, 0);
             try {
-                foundNote = noteManager.create("stub");
-            } catch (InvalidNoteException e) {
-                throw new RuntimeException(e);
+                foundNote = noteManager.create(DatabaseManager.STUB_NOTE_NAME);
+            } catch (InvalidNoteException exception) {
+                Log.e(null, "Something went wrong with note creation, does it already exist?");
+                goBackToHome();
+                return;
             }
         }
 
@@ -45,11 +49,16 @@ public class NoteActivity extends AppCompatActivity {
 
         Note finalFoundNote = foundNote;
         goBackButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomePageActivity.class);
-            startActivity(intent);
+            goBackToHome();
+
             noteManager.save(finalFoundNote, textContents.getText().toString());
 
             Toast.makeText(this, "Returned to Home Page", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void goBackToHome() {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        startActivity(intent);
     }
 }

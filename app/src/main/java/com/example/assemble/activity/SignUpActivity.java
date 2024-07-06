@@ -11,6 +11,7 @@ import com.example.assemble.R;
 import com.example.assemble.util.SharedPreferencesManager;
 
 public class SignUpActivity extends AppCompatActivity {
+
     private SharedPreferencesManager sharedPreferencesManager;
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -31,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String confirmPassword = confirmPasswordEditText.getText().toString();
+
             if (!username.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()) {
 
                 if (!password.equals(confirmPassword)) {
@@ -39,11 +41,15 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordEditText.requestFocus();
                     return;
                 }
-                sharedPreferencesManager.saveNewUser(username, password);
-                Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
-                // redirect to the home page
-                finish();
+                if (sharedPreferencesManager.saveNewUser(username, password)) {
+                    Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Username already exists. Please try another one.", Toast.LENGTH_LONG).show();
+                    usernameEditText.setText("");
+                    usernameEditText.requestFocus();
+                }
             } else {
                 Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             }

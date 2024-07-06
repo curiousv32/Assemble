@@ -5,15 +5,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.assemble.R;
 import com.example.assemble.notes.NoteManager;
 import com.example.assemble.util.SharedPreferencesManager;
 
 public class LoginActivity extends AppCompatActivity {
+
     private SharedPreferencesManager sharedPreferencesManager;
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -34,8 +32,9 @@ public class LoginActivity extends AppCompatActivity {
 
             if (validateLogin(username, password)) {
                 Intent intent = new Intent(this, HomePageActivity.class);
+                intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
-                NoteManager.getInstance().init(sharedPreferencesManager.getID());
+                NoteManager.getInstance(this).init(sharedPreferencesManager.getID());
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
@@ -43,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validateLogin(String username, String password) {
-        String storedUsername = sharedPreferencesManager.getUsername();
-        String storedPassword = sharedPreferencesManager.getPassword();
+        String storedUsername = sharedPreferencesManager.getUsername(username);
+        String storedPassword = sharedPreferencesManager.getPassword(password);
 
         return username.equals(storedUsername) && password.equals(storedPassword);
     }
