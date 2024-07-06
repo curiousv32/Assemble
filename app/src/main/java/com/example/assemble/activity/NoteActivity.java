@@ -22,7 +22,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_page);
 
-        NoteManager noteManager = NoteManager.getInstance();
+        NoteManager noteManager = NoteManager.getInstance(this);
         Note foundNote = null;
 
         if (noteManager.contains(DatabaseManager.STUB_NOTE_NAME)) {

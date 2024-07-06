@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -50,6 +51,4 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.androidx.core.v120)
-    // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
-    testImplementation(group = "org.hsqldb", name = "hsqldb", version = "2.7.3")
 }
