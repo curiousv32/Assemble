@@ -1,5 +1,6 @@
 package com.example.assemble.database;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.assemble.model.Note;
@@ -14,35 +15,37 @@ import java.util.UUID;
 public class DatabaseManager {
 
     private static String DB_NAME = "assemble";
-    private static final String JDBC_URL = "jdbc:hsqldb:file:";
     private static final String JDBC_USER = "SA";
-    private final String JDBC_PASSWORD = "";
+    private static final String JDBC_PASSWORD = "";
+    private String dbPath;
 
     public static final String STUB_NOTE_NAME = "stub";
-
     private List<Note> stubNote = new ArrayList<Note>() {{
         add(new Note(UUID.randomUUID(), STUB_NOTE_NAME));
     }};
-
     public static final String STUB_USER = "admin";
     public static final String STUB_PASSWORD = "admin";
 
-    private static final DatabaseManager REFERENCE = new DatabaseManager();
+    private static DatabaseManager REFERENCE;
 
-    public DatabaseManager() {
+    private DatabaseManager(Context context) {
+        this.dbPath = "jdbc:hsqldb:file:" + context.getFilesDir().getPath() + "/" + DB_NAME;
         try {
-            Class.forName("org.hsqldb.jdbcDriver");
+            Class.forName("org.hsqldb.jdbc.JDBCDriver");
         } catch (ClassNotFoundException e) {
-            Log.e("database error", e.getException().getMessage() +  " " + e.getMessage());
+            Log.e("database error", e.getMessage());
         }
     }
 
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL + DB_NAME, JDBC_USER, JDBC_PASSWORD);
+    public static synchronized DatabaseManager getInstance(Context context) {
+        if (REFERENCE == null) {
+            REFERENCE = new DatabaseManager(context);
+        }
+        return REFERENCE;
     }
 
-    public static DatabaseManager getInstance() {
-        return REFERENCE;
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
     }
 
     public List<Note> getUserNotes(String ownerUUID) {

@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, HomePageActivity.class);
                 intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
-                NoteManager.getInstance().init(sharedPreferencesManager.getID());
+                NoteManager.getInstance(this).init(sharedPreferencesManager.getID());
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
