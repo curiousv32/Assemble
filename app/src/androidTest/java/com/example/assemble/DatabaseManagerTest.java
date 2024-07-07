@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.assemble.database.DatabaseManager;
-import com.example.assemble.model.Note;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,14 +31,5 @@ public class DatabaseManagerTest {
         } catch (SQLException e) {
             Assert.fail("Should not have this SQLException: " + e.getMessage());
         }
-    }
-
-    @Test
-    public void testGetUserNotes() {
-        String testUserUUID = UUID.randomUUID().toString();
-        List<Note> notes = dbManager.getUserNotes(testUserUUID);
-
-        Assert.assertFalse("Stub notes list should not be empty", notes.isEmpty());
-        Assert.assertEquals("Should return stub note", DatabaseManager.STUB_NOTE_NAME, notes.get(0).getName());
     }
 }

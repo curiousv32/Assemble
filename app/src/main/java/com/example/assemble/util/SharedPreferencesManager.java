@@ -31,8 +31,8 @@ public class SharedPreferencesManager {
         return true;
     }
 
-    public String getID() {
-        return sharedPreferences.getString("id", "");
+    public String getID(String username) {
+        return sharedPreferences.getString(username + "_id", "");
     }
 
     public String getUsername(String username) {
