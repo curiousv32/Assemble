@@ -33,6 +33,13 @@ public class NoteTest {
         String newText = "new text";
         Date lastUpdated = note.getLastUpdatedDate();
 
+        // Sleep for 100ms to ensure lastUpdatedDate is different
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         note.setText(newText);
 
         assertEquals(note.getText(), newText);
