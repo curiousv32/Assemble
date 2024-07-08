@@ -1,4 +1,4 @@
-package com.example.assemble.notes;
+package com.example.assemble.service;
 
 import static com.example.assemble.database.DatabaseManager.usingSQLDatabase;
 
@@ -53,7 +53,7 @@ public class NoteManager implements INoteManager {
         return notes;
     }
 
-    public Note addNote(String name, String content) throws InvalidNoteException {
+    public Note addNote(String name, String content) {
         if (!useSQLDatabase) {
             Note note = new Note(UUID.randomUUID(), name);
             note.setText(content);
@@ -71,6 +71,10 @@ public class NoteManager implements INoteManager {
 
     @Override
     public void add(Note note) throws InvalidNoteException {
+        if(!useSQLDatabase) {
+            notes.put(note.getID(), note);
+            return;
+        }
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)")) {
             pstmt.setString(1, note.getID().toString());
@@ -87,6 +91,9 @@ public class NoteManager implements INoteManager {
 
     @Override
     public Note get(UUID noteId, Class<Note> type) {
+        if (!useSQLDatabase) {
+            return notes.get(noteId);
+        }
         Note note = null;
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes WHERE id = ?")) {
@@ -109,6 +116,10 @@ public class NoteManager implements INoteManager {
 
     @Override
     public void update(UUID noteId, Note note) {
+        if (!useSQLDatabase) {
+            notes.put(noteId, note);
+            return;
+        }
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("UPDATE notes SET name = ?, last_updated_date = ?, content = ? WHERE id = ?")) {
             pstmt.setString(1, note.getName());
@@ -126,6 +137,10 @@ public class NoteManager implements INoteManager {
 
     @Override
     public void delete(UUID noteId) {
+        if (!useSQLDatabase) {
+            notes.remove(noteId);
+            return;
+        }
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM notes WHERE id = ?")) {
             pstmt.setString(1, noteId.toString());
@@ -149,7 +164,23 @@ public class NoteManager implements INoteManager {
     }
 
     public List<Note> getUserNotes(String ownerUUID) {
-        return stubNote;
+        List<Note> notes = new ArrayList<>();
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes")) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Note note = new Note(UUID.fromString(rs.getString("id")),
+                            rs.getString("name"));
+                    note.setCreationDate(rs.getTimestamp("creation_date"));
+                    note.setLastUpdatedDate(rs.getTimestamp("last_updated_date"));
+                    note.setText(rs.getString("content"));
+                    notes.add(note);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return notes;
     }
 
     private List<Note> stubNote = new ArrayList<Note>() {{

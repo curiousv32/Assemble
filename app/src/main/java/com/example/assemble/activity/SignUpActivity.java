@@ -11,8 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
-import com.example.assemble.database.UserManager;
+import com.example.assemble.service.UserManager;
 import com.example.assemble.model.User;
+
+import java.util.UUID;
 
 
 public class SignUpActivity extends AppCompatActivity {
@@ -28,7 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         userManager = new UserManager(this);
-        User user = new User(STUB_USER, STUB_PASSWORD);
+        User unregisteredUser = new User(UUID.randomUUID() ,STUB_USER, STUB_PASSWORD);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -47,15 +49,19 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordEditText.requestFocus();
                     return;
                 }
-                user.setUsername(username);
-                user.setPassword(password);
-                if (userManager.saveNewUser(user)) {
-                    Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Username already exists. Please try another one.", Toast.LENGTH_LONG).show();
-                    usernameEditText.setText("");
-                    usernameEditText.requestFocus();
+                unregisteredUser.setUsername(username);
+                unregisteredUser.setPassword(password);
+                try {
+                    if (userManager.addUser(unregisteredUser)) {
+                        Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "Username already exists. Please try another one.", Toast.LENGTH_LONG).show();
+                        usernameEditText.setText("");
+                        usernameEditText.requestFocus();
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             } else {
                 Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();

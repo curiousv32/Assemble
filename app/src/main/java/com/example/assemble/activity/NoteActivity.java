@@ -13,7 +13,7 @@ import com.example.assemble.R;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.model.Note;
-import com.example.assemble.notes.NoteManager;
+import com.example.assemble.service.NoteManager;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.note_page);
 
         NoteManager noteManager = NoteManager.getInstance(this);
-        Note foundNote = null;
+        Note foundNote;
 
         //todo: this is a stub note id, we need to get the first note from a userid
         UUID noteId = UUID.randomUUID();

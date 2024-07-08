@@ -53,4 +53,8 @@ public class DatabaseManager {
     public static boolean usingSQLDatabase() {
         return useSQLDatabase;
     }
+
+    public static void setUseSQLDatabase(boolean useSQLDatabase) {
+        DatabaseManager.useSQLDatabase = useSQLDatabase;
+    }
 }
