@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class DatabaseManager {
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
     }
-//
+
     public static boolean usingSQLDatabase() {
         return useSQLDatabase;
     }
@@ -118,7 +119,7 @@ public class DatabaseManager {
     public static void setUseSQLDatabase(boolean useSQLDatabase) {
         DatabaseManager.useSQLDatabase = useSQLDatabase;
     }
-//
+
     public void clearDatabase(){
         try (Connection connection = DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
              Statement statement = connection.createStatement()) {
@@ -128,6 +129,21 @@ public class DatabaseManager {
             statement.executeUpdate(dropUsersTableSQL);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void runQuery(String query, Object... parameters) {
+        try (Connection conn = getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            for (int i = 1; i < parameters.length; i++) {
+                statement.setObject(i, parameters[i]);
+            }
+
+            statement.executeUpdate();
+        } catch (SQLException exception) {
+            Log.e("DBError", "Something went wrong on runQuery: " + query);
+            exception.printStackTrace();
         }
     }
 }

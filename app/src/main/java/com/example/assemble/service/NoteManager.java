@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class NoteManager implements INoteManager {
         if (!useSQLDatabase) {
             notesList = stubNote;
         } else {
-            notesList = this.getUserNotes(ownerUUID);
+            notesList = this.getUserNotesFromDB(ownerUUID);
         }
         for (Note note : notesList) {
             notes.put(note.getID(), note);
@@ -120,7 +121,15 @@ public class NoteManager implements INoteManager {
             notes.put(noteId, note);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
+
+        dbManager.runQuery(
+                "UPDATE notes SET name = ?, last_updated_date =CURRENT_TIMESTAMP, content = ? WHERE id = ?",
+                note.getName(),
+                note.getLastUpdatedDate().getTime(),
+                note.getText(),
+                noteId.toString()
+        );
+        /*try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("UPDATE notes SET name = ?, last_updated_date = ?, content = ? WHERE id = ?")) {
             pstmt.setString(1, note.getName());
             pstmt.setTimestamp(2, new java.sql.Timestamp(note.getLastUpdatedDate().getTime()));
@@ -129,7 +138,7 @@ public class NoteManager implements INoteManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         notes.put(noteId, note);
     }
 
@@ -163,7 +172,9 @@ public class NoteManager implements INoteManager {
         notes.clear();
     }
 
-    public List<Note> getUserNotes(String ownerUUID) {
+    public Collection<Note> getNotes() { return notes.values(); }
+
+    public List<Note> getUserNotesFromDB(String ownerUUID) {
         List<Note> notes = new ArrayList<>();
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes")) {

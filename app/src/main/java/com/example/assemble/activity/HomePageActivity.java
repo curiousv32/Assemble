@@ -31,7 +31,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Set click listeners for buttons
         noteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NoteActivity.class);
+            Intent intent = new Intent(this, NoteListsActivity.class);
             startActivity(intent);
         });
 

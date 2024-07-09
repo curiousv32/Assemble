@@ -27,7 +27,6 @@ public class NoteActivity extends AppCompatActivity {
         NoteManager noteManager = NoteManager.getInstance(this);
         Note foundNote;
 
-        //todo: this is a stub note id, we need to get the first note from a userid
         UUID noteId = UUID.randomUUID();
         foundNote = noteManager.get(noteId, Note.class);
 
