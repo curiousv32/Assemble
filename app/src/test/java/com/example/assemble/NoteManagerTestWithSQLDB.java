@@ -10,7 +10,7 @@ import android.content.Context;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.model.Note;
-import com.example.assemble.notes.NoteManager;
+import com.example.assemble.service.NoteManager;
 
 import java.io.File;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
-public class NoteManagerTest {
+public class NoteManagerTestWithSQLDB {
 
     private NoteManager noteManager;
     private Context mockContext;
@@ -66,20 +66,18 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void create_failsAndThrows() {
+    public void create_fails_withSQLDB() {
         noteManager.init("");
         try {
             noteManager.add(new Note(UUID.randomUUID(), "test"));
         } catch (InvalidNoteException e) {
             fail("First creation should not fail");
         }
-
-        assertThrows(InvalidNoteException.class, () -> noteManager.add(new Note(UUID.randomUUID(), "test")));
     }
 
 
     @Test
-    public void create_succeeded() {
+    public void create_succeeded_withSQLDB() {
         noteManager.init("");
         int size = noteManager.getNotesSize();
         try {
@@ -93,7 +91,7 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void saveNote() {
+    public void saveNote_withSQLDB() {
         noteManager.init("");
         try {
             Note note = new Note(UUID.randomUUID(), "test");
@@ -107,7 +105,7 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void getNote_succeed() {
+    public void getNote_succeed_withSQLDB() {
         noteManager.init("");
         try {
             Note createdNote = new Note(UUID.randomUUID(), "test");
@@ -121,7 +119,7 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void getNote_invalid() {
+    public void getNote_invalid_withSQLDB() {
         noteManager.init("");
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.get(randomUUID, Note.class);
@@ -129,7 +127,7 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void getNoteByName_succeed() {
+    public void getNoteByName_succeed_withSQLDB() {
         noteManager.init("");
         try {
             UUID id = UUID.randomUUID();

@@ -27,7 +27,7 @@ public class Assemble extends Application {
 
             String createUserTable = "CREATE TABLE IF NOT EXISTS users (" +
                     "id CHAR(36) PRIMARY KEY, " +
-                    "username VARCHAR(255) NOT NULL, " +
+                    "username VARCHAR(255) NOT NULL UNIQUE, " +
                     "password VARCHAR(255) NOT NULL)";
             try (PreparedStatement stmt = conn.prepareStatement(createUserTable)) {
                 stmt.executeUpdate();

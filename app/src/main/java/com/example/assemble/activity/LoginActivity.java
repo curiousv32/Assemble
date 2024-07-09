@@ -7,10 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
-import com.example.assemble.database.UserManager;
-import com.example.assemble.model.User;
-import com.example.assemble.notes.NoteManager;
-import com.example.assemble.util.SharedPreferencesManager;
+import com.example.assemble.service.UserManager;
+import com.example.assemble.service.NoteManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
 
-            if (validateLogin(username, password)) {
+            if (userManager.validateLogin(username, password)) {
                 Intent intent = new Intent(this, HomePageActivity.class);
                 intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
@@ -41,13 +39,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private boolean validateLogin(String username, String password) {
-        String storedUsername = userManager.getUsername(username);
-        String storedPassword = userManager.getPassword(password);
-
-        return username.equals(storedUsername) && password.equals(storedPassword);
     }
 
     public void onRegisterClick(View view) {

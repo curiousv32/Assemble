@@ -4,8 +4,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        NoteManagerTest.class,
-        NoteTest.class
+        NoteManagerTestWithSQLDB.class,
+        NoteManagerTestWithStubDB.class,
+        NoteTest.class,
+        UserManagerTestWithSQLDB.class,
+        UserManagerTestWithStubDB.class
 })
 public class AllTests {
 }
