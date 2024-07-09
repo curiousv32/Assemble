@@ -6,16 +6,16 @@ import java.util.List;
 
 public class FlashcardsStub {
     private List<Flashcard> flashcards = new ArrayList<>();
-    private int nextId = 1;
+    private String userName = "dave";
 
-    public void addFlashcard(int userId, String question, String answer) {
-        flashcards.add(new Flashcard(nextId++, userId, question, answer));
+    public void addFlashcard(String userName, String question, String answer) {
+        flashcards.add(new Flashcard(userName, question, answer));
     }
 
-    public List<Flashcard> getFlashcards(int userId) {
+    public List<Flashcard> getFlashcards(String username) {
         List<Flashcard> userFlashcards = new ArrayList<>();
         for (Flashcard flashcard : flashcards) {
-            if (flashcard.getUserId() == userId) {
+            if (flashcard.getUsername().equals(username)) {
                 userFlashcards.add(flashcard);
             }
         }

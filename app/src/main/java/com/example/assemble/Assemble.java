@@ -42,6 +42,16 @@ public class Assemble extends Application {
             try (PreparedStatement stmt = conn.prepareStatement(createNoteTable)) {
                 stmt.executeUpdate();
             }
+            String createFlashcardsTable = "CREATE TABLE IF NOT EXISTS flashcards ("
+                    + "id INTEGER IDENTITY PRIMARY KEY,"
+                    + "username VARCHAR(255) NOT NULL,"
+                    + "question VARCHAR(255) NOT NULL,"
+                    + "answer VARCHAR(255) NOT NULL,"
+                    + "FOREIGN KEY (username) REFERENCES users(username)"
+                    + ")";
+            try (PreparedStatement stmt = conn.prepareStatement(createFlashcardsTable)) {
+                stmt.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

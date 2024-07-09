@@ -10,9 +10,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
+import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.model.Flashcard;
-import com.example.assemble.model.FlashcardAdapter;
+import com.example.assemble.util.FlashcardAdapter;
 import com.example.assemble.database.FlashcardsStub;
+
 import java.util.List;
 
 public class FlashcardsActivity extends AppCompatActivity {
@@ -22,7 +24,8 @@ public class FlashcardsActivity extends AppCompatActivity {
     private Button addFlashcardButton;
     private ListView flashcardsListView;
     private FlashcardsStub flashcardStub;
-    private int userId = 1; // Replace with actual logged-in user ID
+    private FlashcardManager flashcardManager;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,14 @@ public class FlashcardsActivity extends AppCompatActivity {
         addFlashcardButton = findViewById(R.id.addFlashcardButton);
         flashcardsListView = findViewById(R.id.flashcardsListView);
         flashcardStub = new FlashcardsStub();
-
+        flashcardManager = new FlashcardManager(this);
+        username = getIntent().getStringExtra("USER_NAME");
         addFlashcardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String question = "Question: " + questionEditText.getText().toString();
                 String answer = "Answer: " + answerEditText.getText().toString();
-                flashcardStub.addFlashcard(userId, question, answer);
+                flashcardManager.addFlashcard(username,question,answer);
                 Toast.makeText(FlashcardsActivity.this, "Flashcard added", Toast.LENGTH_SHORT).show();
                 loadFlashcards();
             }
@@ -50,7 +54,7 @@ public class FlashcardsActivity extends AppCompatActivity {
     }
 
     private void loadFlashcards() {
-        List<Flashcard> flashcards = flashcardStub.getFlashcards(userId);
+        List<Flashcard> flashcards = flashcardManager.getFlashcards(username);
         FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
         flashcardsListView.setAdapter(adapter);
     }

@@ -1,4 +1,4 @@
-package com.example.assemble.model;
+package com.example.assemble.util;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.assemble.R;
+import com.example.assemble.model.Flashcard;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +67,7 @@ public class FlashcardAdapter extends BaseAdapter {
                 flipOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-                        // No-op
+                        // Don't do anything when the animation starts
                     }
 
                     @Override

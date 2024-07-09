@@ -9,18 +9,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
 
 public class HomePageActivity extends AppCompatActivity {
-
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
 
-        String userName = getIntent().getStringExtra("USER_NAME");
+        username = getIntent().getStringExtra("USER_NAME");
 
         // Find the welcome TextView and update it with the user's name
         TextView welcomeTextView = findViewById(R.id.textView3);
-        if (userName != null && !userName.isEmpty()) {
-            String welcomeMessage = getString(R.string.welcome_message, userName);
+        if (username != null && !username.isEmpty()) {
+            String welcomeMessage = getString(R.string.welcome_message, username);
             welcomeTextView.setText(welcomeMessage);
         }
 
@@ -40,7 +40,9 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         flashcardButton.setOnClickListener(v -> {
-            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, FlashcardsActivity.class);
+            intent.putExtra("USER_NAME", username);
+            startActivity(intent);
         });
 
     }
