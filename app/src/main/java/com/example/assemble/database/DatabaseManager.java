@@ -14,19 +14,21 @@ import java.util.UUID;
 
 public class DatabaseManager {
 
+    private static boolean useSQLDatabase = true;
     private static String DB_NAME = "assemble";
     private static final String JDBC_USER = "SA";
     private static final String JDBC_PASSWORD = "";
     private String dbPath;
+    private static DatabaseManager REFERENCE;
 
     public static final String STUB_NOTE_NAME = "stub";
     private List<Note> stubNote = new ArrayList<Note>() {{
         add(new Note(UUID.randomUUID(), STUB_NOTE_NAME));
     }};
+
     public static final String STUB_USER = "admin";
     public static final String STUB_PASSWORD = "admin";
 
-    private static DatabaseManager REFERENCE;
 
     private DatabaseManager(Context context) {
         this.dbPath = "jdbc:hsqldb:file:" + context.getFilesDir().getPath() + "/" + DB_NAME;
@@ -48,7 +50,11 @@ public class DatabaseManager {
         return DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
     }
 
-    public List<Note> getUserNotes(String ownerUUID) {
-        return stubNote;
+    public static boolean usingSQLDatabase() {
+        return useSQLDatabase;
+    }
+
+    public static void setUseSQLDatabase(boolean useSQLDatabase) {
+        DatabaseManager.useSQLDatabase = useSQLDatabase;
     }
 }

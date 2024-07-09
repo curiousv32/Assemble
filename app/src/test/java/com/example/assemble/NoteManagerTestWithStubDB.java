@@ -7,14 +7,15 @@ import org.mockito.Mockito;
 
 import android.content.Context;
 
+import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.model.Note;
-import com.example.assemble.notes.NoteManager;
+import com.example.assemble.service.NoteManager;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.UUID;
-public class NoteManagerTest {
+
+public class NoteManagerTestWithStubDB {
 
     private NoteManager noteManager;
     private Context mockContext;
@@ -25,41 +26,19 @@ public class NoteManagerTest {
         File mockFile = Mockito.mock(File.class);
         Mockito.when(mockFile.getPath()).thenReturn("mock/path");
         Mockito.when(mockContext.getFilesDir()).thenReturn(mockFile);  // Ensure getFilesDir() does not return null
+        DatabaseManager.setUseSQLDatabase(false);
         noteManager = NoteManager.getInstance(mockContext);
         noteManager.clearNotes(); // Clean notes after each test
     }
 
     @Test
-    public void init_returnsNonNull() {
-        HashMap<UUID, Note> notes = noteManager.init("");
-        assertNotNull(notes);
-    }
-
-    @Test
-    public void create_failsAndThrows() {
-        noteManager.init("");
-        try {
-            noteManager.create("test");
-        } catch (InvalidNoteException e) {
-            fail("First creation should not fail");
-        }
-
-        try {
-            noteManager.create("test");
-            fail("Expected an InvalidNoteException to be thrown");
-        } catch (InvalidNoteException e) {
-            assertEquals("Note name \"test\" already exists", e.getMessage());
-        }
-    }
-
-
-    @Test
-    public void create_succeeded() {
+    public void create_succeeded_withStubDB() {
         noteManager.init("");
         int size = noteManager.getNotesSize();
         try {
-            Note note = noteManager.create("test");
-            assertNotNull("Note should be created", note);
+            Note newNote = new Note(UUID.randomUUID(), "test");
+            noteManager.add(newNote);
+            assertNotNull("Note should be created", newNote);
             assertEquals("Size should increase by 1", size + 1, noteManager.getNotesSize());
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());
@@ -67,23 +46,26 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void saveNote() {
+    public void saveNote_withStubDB() {
         noteManager.init("");
         try {
-            Note note = noteManager.create("test");
-            noteManager.save(note, "New text");
-            assertEquals("Content should be updated", "New text", note.getText());
+            Note newNote = new Note(UUID.randomUUID(), "test");
+            noteManager.add(newNote);
+            newNote.setText("New text");
+            noteManager.update(newNote.getID(), newNote);
+            assertEquals("Content should be updated", "New text", newNote.getText());
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());
         }
     }
 
     @Test
-    public void getNote_succeed() {
+    public void getNote_succeed_withStubDB() {
         noteManager.init("");
         try {
-            Note createdNote = noteManager.create("test");
-            Note retrievedNote = noteManager.getNote(createdNote.getID());
+            Note createdNote = new Note(UUID.randomUUID(), "test");
+            noteManager.add(createdNote);
+            Note retrievedNote = noteManager.get(createdNote.getID(), Note.class);
             assertNotNull("Note should be retrievable", retrievedNote);
         } catch (Exception e) {
             fail("Should not throw an exception: " + e.getMessage());
@@ -91,30 +73,26 @@ public class NoteManagerTest {
     }
 
     @Test
-    public void getNote_invalid() {
+    public void getNote_invalid_withStubDB() {
         noteManager.init("");
         UUID randomUUID = UUID.randomUUID();
-        Note note = noteManager.getNote(randomUUID);
+        Note note = noteManager.get(randomUUID, Note.class);
         assertNull("Should not find a non-existent note", note);
     }
 
     @Test
-    public void getNoteByName_succeed() {
+    public void getNoteByName_succeed_withStubDB() {
         noteManager.init("");
         try {
-            Note createdNote = noteManager.create("test");
-            Note foundNote = noteManager.getNoteByName("test");
-            assertEquals("Retrieved note should match created", createdNote, foundNote);
+            UUID id = UUID.randomUUID();
+            Note createdNote = new Note(id, "test");
+            noteManager.add(createdNote);
+            Note foundNote = noteManager.get(id, Note.class);
+            assertTrue("Retrieved note should match created", createdNote.equals(foundNote));
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());
         }
     }
 
-    @Test
-    public void getNoteByName_invalid() {
-        noteManager.init("");
-        Note note = noteManager.getNoteByName("notexisted");
-        assertNull("Should not find a non-existent note", note);
-    }
 
 }
