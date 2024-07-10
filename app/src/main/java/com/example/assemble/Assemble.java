@@ -13,17 +13,18 @@ public class Assemble extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Assemble.context = getApplicationContext();
+        context = getApplicationContext();
         //cleanAllTables();
         initializeDatabase();
     }
 
     public static Context getAppContext() {
-        return Assemble.context;
+        return context;
     }
 
     private void initializeDatabase() {
         DatabaseManager dbManager = DatabaseManager.getInstance(this);
+
         try (Connection conn = dbManager.getConnection()) {
 
             String createUserTable = "CREATE TABLE IF NOT EXISTS users (" +
@@ -36,14 +37,14 @@ public class Assemble extends Application {
 
             String createNoteTable = "CREATE TABLE IF NOT EXISTS notes (" +
                     "id CHAR(36) PRIMARY KEY, " +
+                    "owner_id CHAR(36), " +
                     "name VARCHAR(255) NOT NULL, " +
                     "creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "content VARCHAR(2000))";
+                    "content LONGVARCHAR)";
             try (PreparedStatement stmt = conn.prepareStatement(createNoteTable)) {
                 stmt.executeUpdate();
             }
-
             String createFlashcardsTable = "CREATE TABLE IF NOT EXISTS flashcards ("
                     + "id CHAR(36) PRIMARY KEY,"
                     + "username VARCHAR(255) NOT NULL,"
@@ -57,7 +58,7 @@ public class Assemble extends Application {
             String createTaskTable = "CREATE TABLE IF NOT EXISTS tasks ("
                     + "id CHAR(36) PRIMARY KEY,"
                     + "title VARCHAR(255) NOT NULL,"
-                    + "description VARCHAR(250) NOT NULL,"
+                    + "description VARCHAR(255) NOT NULL,"
                     + "deadline TIMESTAMP NOT NULL,"
                     + "priority VARCHAR(50) NOT NULL,"
                     + "status VARCHAR(50) NOT NULL,"
@@ -86,5 +87,4 @@ public class Assemble extends Application {
             e.printStackTrace();
         }
     }
-
 }
