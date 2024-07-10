@@ -53,44 +53,5 @@ public class HomePageActivity extends AppCompatActivity {
             intent.putExtra("USER_NAME", username);
             startActivity(intent);
         });
-
-        initializeDb();
-
-    }
-
-    private void initializeDb() {
-        DatabaseManager dbManager = DatabaseManager.getInstance(this);
-        Statement statement = null;
-        Connection connection = null;
-
-        try {
-            connection = dbManager.getConnection();
-            InputStream inputStream = getAssets().open("db/initializeDb.script");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sqlScript = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sqlScript.append(line).append('\n');
-            }
-            reader.close();
-
-            // Split the script into individual statements and execute them
-            String[] sqlStatements = sqlScript.toString().split(";");
-            statement = connection.createStatement();
-            for (String sql : sqlStatements) {
-                if (sql.trim().length() > 0) {
-                    statement.execute(sql);
-                }
-            }
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
