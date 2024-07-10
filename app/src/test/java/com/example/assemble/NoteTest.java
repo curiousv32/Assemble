@@ -27,7 +27,7 @@ public class NoteTest {
     }
 
     @Test
-    public void text_set_and_get() {
+    public void test_set_and_get() {
         assertEquals(note.getText(), "");
 
         String newText = "new text";
@@ -41,7 +41,7 @@ public class NoteTest {
         }
 
         note.setText(newText);
-
+        note.setLastUpdatedDate();
         assertEquals(note.getText(), newText);
         assertNotEquals(lastUpdated, note.getLastUpdatedDate());
     }

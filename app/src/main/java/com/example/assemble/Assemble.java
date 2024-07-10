@@ -36,6 +36,7 @@ public class Assemble extends Application {
 
             String createNoteTable = "CREATE TABLE IF NOT EXISTS notes (" +
                     "id CHAR(36) PRIMARY KEY, " +
+                    "owner_id CHAR(36), " +
                     "name VARCHAR(255) NOT NULL, " +
                     "creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +

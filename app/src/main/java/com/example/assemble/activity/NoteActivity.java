@@ -25,42 +25,24 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.note_page);
 
         NoteManager noteManager = NoteManager.getInstance(this);
-        Note foundNote;
-
-        UUID noteId = UUID.randomUUID();
-        foundNote = noteManager.get(noteId, Note.class);
+        Note foundNote = noteManager.getOpenNote();
 
         Button goBackButton = findViewById(R.id.notes_go_back);
         TextView textContents = findViewById(R.id.note_contents);
 
         if (foundNote != null) {
             textContents.setText(foundNote.getText().toCharArray(), 0, foundNote.getText().length()); //show the note text
-        } else {
-            textContents.setText("".toCharArray(), 0, 0);
-            foundNote = new Note(noteId, DatabaseManager.STUB_NOTE_NAME);
-            try {
-                noteManager.add(foundNote); //create a default note
-            } catch (InvalidNoteException exception) {
-                Log.e(null, "Add Note Failed");
-                goBackToHome();
-                return;
-            }
         }
 
         textContents.requestFocus();
-
-        Note finalFoundNote = foundNote;
         goBackButton.setOnClickListener(v -> {
-            goBackToHome();
+            startActivity(new Intent(this, NoteListsActivity.class));
+            noteManager.setText(foundNote, textContents.getText().toString());
+            noteManager.update(foundNote.getID(), foundNote);
 
-            noteManager.update(finalFoundNote.getID(), finalFoundNote);
+            noteManager.setOpenedNote(null);
 
             Toast.makeText(this, "Returned to Home Page", Toast.LENGTH_SHORT).show();
         });
-    }
-
-    private void goBackToHome() {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        startActivity(intent);
     }
 }

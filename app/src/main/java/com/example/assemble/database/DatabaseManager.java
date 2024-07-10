@@ -136,8 +136,8 @@ public class DatabaseManager {
         try (Connection conn = getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
 
-            for (int i = 1; i < parameters.length; i++) {
-                statement.setObject(i, parameters[i]);
+            for (int i = 1; i <= parameters.length; i++) {
+                statement.setObject(i, parameters[i - 1]);
             }
 
             statement.executeUpdate();

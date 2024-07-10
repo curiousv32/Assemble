@@ -43,15 +43,11 @@ public class UserManager implements IUserManager{
             throw new InvalidUserException("Username already exists");
         }
         if (useSQLDatabase) {
-            try (Connection conn = dbManager.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users (id, username, password) VALUES (?, ?, ?)")) {
-                pstmt.setString(1, user.getId().toString());
-                pstmt.setString(2, user.getUsername());
-                pstmt.setString(3, user.getPassword());
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                throw new Exception("Error adding user to database", e);
-            }
+            dbManager.runQuery("INSERT INTO users (id, username, password) VALUES (?, ?, ?)",
+                    user.getId().toString(),
+                    user.getUsername(),
+                    user.getPassword()
+            );
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(user.getId().toString() + "_username", user.getUsername()); // For finding username by id
@@ -93,16 +89,7 @@ public class UserManager implements IUserManager{
     @Override
     public void delete(UUID userId) {
         if (useSQLDatabase) {
-            try (Connection conn = dbManager.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users WHERE id = ?")) {
-                pstmt.setString(1, userId.toString());
-                int affectedRows = pstmt.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Deleting user failed, no changes applied.");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dbManager.runQuery("DELETE FROM users WHERE id=?", userId.toString());
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(userId.toString() + "_username");
@@ -114,18 +101,12 @@ public class UserManager implements IUserManager{
     @Override
     public void update(UUID userId, User user) {
         if (useSQLDatabase) {
-            try (Connection conn = dbManager.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET username = ?, password = ? WHERE id = ?")) {
-                pstmt.setString(1, user.getUsername());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, userId.toString());
-                int affectedRows = pstmt.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Updating user failed, no changes applied.");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dbManager.runQuery(
+                    "UPDATE users SET username = ?, password = ? WHERE id = ?",
+                    user.getUsername(),
+                    user.getPassword(),
+                    userId.toString()
+            );
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(userId.toString() + "_username", user.getUsername());
@@ -240,12 +221,7 @@ public class UserManager implements IUserManager{
 
     public void cleanUsers() {
         if (useSQLDatabase) {
-            try (Connection conn = dbManager.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users")) {
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dbManager.runQuery("DELETE FROM users");
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
