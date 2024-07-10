@@ -85,6 +85,7 @@ public class TodoFormActivity extends AppCompatActivity {
         try {
             taskManager.add(newTask);
             Toast.makeText(this, "Task saved successfully!", Toast.LENGTH_SHORT).show();
+            finish();
         } catch (Exception e) {
             Toast.makeText(this, "Failed to save task: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }

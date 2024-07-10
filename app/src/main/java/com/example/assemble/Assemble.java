@@ -14,6 +14,7 @@ public class Assemble extends Application {
     public void onCreate() {
         super.onCreate();
         Assemble.context = getApplicationContext();
+        //cleanAllTables();
         initializeDatabase();
     }
 
@@ -38,12 +39,13 @@ public class Assemble extends Application {
                     "name VARCHAR(255) NOT NULL, " +
                     "creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "content TEXT)";
+                    "content VARCHAR(2000))";
             try (PreparedStatement stmt = conn.prepareStatement(createNoteTable)) {
                 stmt.executeUpdate();
             }
+
             String createFlashcardsTable = "CREATE TABLE IF NOT EXISTS flashcards ("
-                    + "id INTEGER IDENTITY PRIMARY KEY,"
+                    + "id CHAR(36) PRIMARY KEY,"
                     + "username VARCHAR(255) NOT NULL,"
                     + "question VARCHAR(255) NOT NULL,"
                     + "answer VARCHAR(255) NOT NULL,"
@@ -55,11 +57,12 @@ public class Assemble extends Application {
             String createTaskTable = "CREATE TABLE IF NOT EXISTS tasks ("
                     + "id CHAR(36) PRIMARY KEY,"
                     + "title VARCHAR(255) NOT NULL,"
-                    + "description TEXT NOT NULL,"
+                    + "description VARCHAR(250) NOT NULL,"
                     + "deadline TIMESTAMP NOT NULL,"
                     + "priority VARCHAR(50) NOT NULL,"
                     + "status VARCHAR(50) NOT NULL,"
-                    + "FOREIGN KEY (user_id) REFERENCES users(id)"
+                    + "userid CHAR(36),"
+                    + "FOREIGN KEY (userid) REFERENCES users(id)"
                     + ")";
             try (PreparedStatement stmt = conn.prepareStatement(createTaskTable)) {
                 stmt.executeUpdate();
@@ -68,4 +71,20 @@ public class Assemble extends Application {
             e.printStackTrace();
         }
     }
+
+    private void cleanAllTables() {
+        DatabaseManager dbManager = DatabaseManager.getInstance(this);
+        try (Connection conn = dbManager.getConnection()) {
+            String[] tables = {"flashcards", "tasks", "notes", "users"};
+            for (String table : tables) {
+                String deleteTable = "DROP TABLE IF EXISTS " + table;
+                try (PreparedStatement stmt = conn.prepareStatement(deleteTable)) {
+                    stmt.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

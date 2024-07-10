@@ -182,4 +182,22 @@ public class TaskManager implements ITaskManager {
     private List<Task> stubTask = new ArrayList<Task>() {{
         add(new Task(UUID.randomUUID(), "Stub Task", "This is a stub task description", new java.util.Date(), "High", "Pending"));
     }};
+
+    public List<Task> getAllTasks(String ownerUUID) {
+        tasks.clear();
+        List<Task> taskList = updateTaskListFromDB(ownerUUID);
+        for (Task task : taskList) {
+            tasks.put(task.getId(), task);
+        }
+        return taskList;
+    }
+
+    private List<Task> updateTaskListFromDB(String ownerUUID) {
+        tasks.clear();
+        List<Task> taskList = getUserTasks(ownerUUID);
+        for (Task task : taskList) {
+            tasks.put(task.getId(), task);
+        }
+        return taskList;
+    }
 }

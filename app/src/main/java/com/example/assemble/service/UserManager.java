@@ -253,6 +253,11 @@ public class UserManager implements IUserManager{
         }
     }
 
+    public UUID getUUID(String username) {
+        String id = getID(username);
+        return id.isEmpty() ? null : UUID.fromString(id);
+    }
+
     public static String getSHARED_PREF_NAME(){
         return SHARED_PREF_NAME;
     }
