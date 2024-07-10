@@ -46,4 +46,18 @@ public class SharedPreferencesManager {
     public boolean doesUsernameExist(String username) {
         return sharedPreferences.contains(username + "_username");
     }
+
+    public void saveCurrentUser(String username) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("current_user", username);
+        editor.apply();
+    }
+    public String getCurrentUser() {
+        return sharedPreferences.getString("current_user", null);
+    }
+    public void clearCurrentUser() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("current_user");
+        editor.apply();
+    }
 }

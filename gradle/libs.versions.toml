@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0"
+appcompatVersion = "1.4.0"
 core = "1.5.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
@@ -16,6 +17,7 @@ androidx-test-runner = "1.5.2"
 mockito = "3.12.4"
 
 [libraries]
+androidx-appcompat-v140 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-v120 = { module = "androidx.test:core", version.ref = "core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
+import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.util.SharedPreferencesManager;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -16,13 +17,14 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
-
+    private DatabaseManager databaseManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
         sharedPreferencesManager = new SharedPreferencesManager(this);
+        databaseManager = DatabaseManager.getInstance(this);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -43,6 +45,8 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 if (sharedPreferencesManager.saveNewUser(username, password)) {
+                    // Save user profile in the database
+                    databaseManager.addUserProfile(username, password);
                     Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
