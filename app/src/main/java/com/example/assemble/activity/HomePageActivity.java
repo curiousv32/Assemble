@@ -7,6 +7,15 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
+import com.example.assemble.database.DatabaseManager;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class HomePageActivity extends AppCompatActivity {
     private String username;
@@ -44,6 +53,5 @@ public class HomePageActivity extends AppCompatActivity {
             intent.putExtra("USER_NAME", username);
             startActivity(intent);
         });
-
     }
 }
