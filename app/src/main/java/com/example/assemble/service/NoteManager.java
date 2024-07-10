@@ -3,6 +3,8 @@ package com.example.assemble.service;
 import static com.example.assemble.database.DatabaseManager.usingSQLDatabase;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
 import com.example.assemble.interfaces.INoteManager;
@@ -13,15 +15,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class NoteManager implements INoteManager {
 
+    public static final int MAX_NOTE_NAME_SIZE = 10;
+
     private static NoteManager REFERENCE;
     private DatabaseManager dbManager;
     private HashMap<UUID, Note> notes;
+    private Note openedNote;
     private boolean useSQLDatabase;
 
     public static final String STUB_NOTE_NAME = "stub";
@@ -45,7 +52,7 @@ public class NoteManager implements INoteManager {
         if (!useSQLDatabase) {
             notesList = stubNote;
         } else {
-            notesList = this.getUserNotes(ownerUUID);
+            notesList = this.getUserNotesFromDB(ownerUUID);
         }
         for (Note note : notesList) {
             notes.put(note.getID(), note);
@@ -53,39 +60,30 @@ public class NoteManager implements INoteManager {
         return notes;
     }
 
-    public Note addNote(String name, String content) {
-        if (!useSQLDatabase) {
-            Note note = new Note(UUID.randomUUID(), name);
-            note.setText(content);
-            return note;
-        } else {
-            Note note = new Note(UUID.randomUUID(), name);
-            try {
-                add(note);
-            } catch (InvalidNoteException e) {
-                e.printStackTrace();
-            }
-            return note;
+    public Note createNote(String name) throws InvalidNoteException {
+        Note note = new Note(UUID.randomUUID(), name);
+        notes.put(note.getID(), note);
+
+        if (useSQLDatabase) {
+            add(note);
         }
+        return note;
     }
 
     @Override
     public void add(Note note) throws InvalidNoteException {
-        if(!useSQLDatabase) {
+        if (!useSQLDatabase) {
             notes.put(note.getID(), note);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)")) {
-            pstmt.setString(1, note.getID().toString());
-            pstmt.setString(2, note.getName());
-            pstmt.setTimestamp(3, new java.sql.Timestamp(note.getCreationDate().getTime()));
-            pstmt.setTimestamp(4, new java.sql.Timestamp(note.getLastUpdatedDate().getTime()));
-            pstmt.setString(5, note.getText());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dbManager.runQuery(
+                "INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)",
+                note.getID().toString(),
+                note.getName(),
+                new java.sql.Timestamp(note.getCreationDate().getTime()),
+                new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
+                note.getText()
+        );
         notes.put(note.getID(), note);
     }
 
@@ -98,12 +96,14 @@ public class NoteManager implements INoteManager {
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes WHERE id = ?")) {
             pstmt.setString(1, noteId.toString());
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+
                     note = new Note(UUID.fromString(rs.getString("id")),
                             rs.getString("name"));
-                    note.setCreationDate(rs.getTimestamp("creation_date"));
-                    note.setLastUpdatedDate(rs.getTimestamp("last_updated_date"));
+                    note.setCreationDate(new Date(rs.getTimestamp("creation_date").getTime()));
+                    note.setLastUpdatedDate(new Date(rs.getTimestamp("last_updated_date").getTime()));
                     note.setText(rs.getString("content"));
                 }
             }
@@ -113,24 +113,22 @@ public class NoteManager implements INoteManager {
         return note;
     }
 
+    public void setText(Note note, String content) {
+        note.setText(content);
+        note.setLastUpdatedDate();
+    }
 
     @Override
     public void update(UUID noteId, Note note) {
-        if (!useSQLDatabase) {
-            notes.put(noteId, note);
-            return;
+
+        if (useSQLDatabase) {
+            dbManager.runQuery(
+                    "UPDATE notes SET name=?, last_updated_date=CURRENT_TIMESTAMP, content=? WHERE id = ?",
+                    note.getName(),
+                    note.getText(),
+                    noteId.toString()
+            );
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("UPDATE notes SET name = ?, last_updated_date = ?, content = ? WHERE id = ?")) {
-            pstmt.setString(1, note.getName());
-            pstmt.setTimestamp(2, new java.sql.Timestamp(note.getLastUpdatedDate().getTime()));
-            pstmt.setString(3, note.getText());
-            pstmt.setString(4, noteId.toString());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        notes.put(noteId, note);
     }
 
 
@@ -141,14 +139,17 @@ public class NoteManager implements INoteManager {
             notes.remove(noteId);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM notes WHERE id = ?")) {
-            pstmt.setString(1, noteId.toString());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        dbManager.runQuery("DELETE FROM notes WHERE id=?", noteId.toString());
         notes.remove(noteId);
+    }
+
+    public Note getOpenNote() {
+        return openedNote;
+    }
+
+    public void setOpenedNote(Note openedNote) {
+        this.openedNote = openedNote;
     }
 
     public boolean contains(String noteName) {
@@ -163,16 +164,18 @@ public class NoteManager implements INoteManager {
         notes.clear();
     }
 
-    public List<Note> getUserNotes(String ownerUUID) {
+    public Collection<Note> getNotes() { return notes.values(); }
+
+    public List<Note> getUserNotesFromDB(String ownerUUID) {
         List<Note> notes = new ArrayList<>();
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes")) {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Note note = new Note(UUID.fromString(rs.getString("id")),
-                            rs.getString("name"));
-                    note.setCreationDate(rs.getTimestamp("creation_date"));
-                    note.setLastUpdatedDate(rs.getTimestamp("last_updated_date"));
+                    Note note = new Note(UUID.fromString(rs.getString("id")), rs.getString("name"));
+
+                    note.setCreationDate(new Date(rs.getTimestamp("creation_date").getTime()));
+                    note.setLastUpdatedDate(new Date(rs.getTimestamp("last_updated_date").getTime()));
                     note.setText(rs.getString("content"));
                     notes.add(note);
                 }
