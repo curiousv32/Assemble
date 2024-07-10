@@ -78,36 +78,6 @@ public class DatabaseManager {
         }
     }
 
-//    public void addUser(String userName, String password) {
-//        String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-//        try (Connection connection = getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//            preparedStatement.setString(1, userName);
-//            preparedStatement.setString(2, password);
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            Log.e("database error", "Error adding user: " + e.getMessage());
-//        }
-//    }
-//
-//    public User getUser(String userName) {
-//        String sql = "SELECT * FROM users WHERE username = ?";
-//        try (Connection connection = getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//            preparedStatement.setString(1, userName);
-//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    String username = resultSet.getString("username");
-//                    String password = resultSet.getString("password");
-//                    return new User(username, password);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            Log.e("database error", "Error retrieving user: " + e.getMessage());
-//        }
-//        return null;
-//    }
-//
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
     }

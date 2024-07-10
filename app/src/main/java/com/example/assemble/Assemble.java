@@ -10,12 +10,12 @@ import java.sql.SQLException;
 public class Assemble extends Application {
     private static Context context;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        initializeDatabase();
-    }
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//        context = getApplicationContext();
+//        initializeDatabase();
+//    }
 
     public static Context getAppContext() {
         return context;

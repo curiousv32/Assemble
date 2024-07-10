@@ -7,6 +7,15 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
+import com.example.assemble.database.DatabaseManager;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class HomePageActivity extends AppCompatActivity {
     private String username;
@@ -45,5 +54,43 @@ public class HomePageActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        initializeDb();
+
+    }
+
+    private void initializeDb() {
+        DatabaseManager dbManager = DatabaseManager.getInstance(this);
+        Statement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = dbManager.getConnection();
+            InputStream inputStream = getAssets().open("db/initializeDb.script");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sqlScript = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sqlScript.append(line).append('\n');
+            }
+            reader.close();
+
+            // Split the script into individual statements and execute them
+            String[] sqlStatements = sqlScript.toString().split(";");
+            statement = connection.createStatement();
+            for (String sql : sqlStatements) {
+                if (sql.trim().length() > 0) {
+                    statement.execute(sql);
+                }
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
