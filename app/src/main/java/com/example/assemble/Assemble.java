@@ -52,6 +52,18 @@ public class Assemble extends Application {
             try (PreparedStatement stmt = conn.prepareStatement(createFlashcardsTable)) {
                 stmt.executeUpdate();
             }
+            String createTaskTable = "CREATE TABLE IF NOT EXISTS tasks ("
+                    + "id CHAR(36) PRIMARY KEY,"
+                    + "title VARCHAR(255) NOT NULL,"
+                    + "description TEXT NOT NULL,"
+                    + "deadline TIMESTAMP NOT NULL,"
+                    + "priority VARCHAR(50) NOT NULL,"
+                    + "status VARCHAR(50) NOT NULL,"
+                    + "FOREIGN KEY (user_id) REFERENCES users(id)"
+                    + ")";
+            try (PreparedStatement stmt = conn.prepareStatement(createTaskTable)) {
+                stmt.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

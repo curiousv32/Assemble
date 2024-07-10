@@ -26,7 +26,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Find buttons by their IDs
         Button noteButton = findViewById(R.id.button);
-        Button listButton = findViewById(R.id.button2);
+        Button todolistButton = findViewById(R.id.button2);
         Button flashcardButton = findViewById(R.id.button3);
 
         // Set click listeners for buttons
@@ -35,8 +35,9 @@ public class HomePageActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        listButton.setOnClickListener(v -> {
-            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+        todolistButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TodoFormActivity.class);
+            startActivity(intent);
         });
 
         flashcardButton.setOnClickListener(v -> {

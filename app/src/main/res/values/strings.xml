@@ -8,4 +8,8 @@
     <string name="note_button">Notes</string>
     <string name="list_button">To-do list</string>
     <string name="flashcard_button">Flashcards</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task Description</string>
+    <string name="task_deadline">Task Deadline</string>
+    <string name="submit">Save</string>
 </resources>
