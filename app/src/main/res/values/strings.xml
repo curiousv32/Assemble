@@ -14,4 +14,7 @@
     <string name="submit">Save</string>
     <string name="todo_list">Todo List</string>
     <string name="add_task">Add Task</string>
+    <string name="task_priority">Priority</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>

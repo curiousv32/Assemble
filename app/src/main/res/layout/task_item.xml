@@ -13,7 +13,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#000"
-        android:text="Task Title" />
+        android:text="@string/task_title" />
 
     <TextView
         android:id="@+id/taskDescription"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="#666"
-        android:text="Task Description" />
+        android:text="@string/task_description" />
 
     <TextView
         android:id="@+id/taskDeadline"
@@ -29,14 +29,22 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#333"
-        android:text="Deadline" />
+        android:text="@string/task_deadline" />
 
     <TextView
         android:id="@+id/taskPriority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Priority"
+        android:text="@string/task_priority"
         android:textColor="#0073FF"
         android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        />
+
 
 </LinearLayout>

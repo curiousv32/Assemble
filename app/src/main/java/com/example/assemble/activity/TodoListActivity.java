@@ -1,6 +1,5 @@
 package com.example.assemble.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -41,13 +40,11 @@ public class TodoListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();
         List<Task> tasks = TaskManager.getInstance(this).getAllTasks(ownerUUID);
         adapter.setTasks(tasks);
-        adapter.notifyDataSetChanged();
     }
 
 }
