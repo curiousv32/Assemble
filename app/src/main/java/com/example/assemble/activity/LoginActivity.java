@@ -7,9 +7,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
+import com.example.assemble.service.SessionManager;
+import com.example.assemble.service.TaskManager;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.service.UserManager;
 import com.example.assemble.service.NoteManager;
+
+import java.util.UUID;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,10 +44,15 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             if (userManager.validateLogin(username, password)) {
+                UUID userId = userManager.getUUID(username);
+                SessionManager sessionManager = SessionManager.getInstance();
+                sessionManager.setCurrentUserID(userId);
+                sessionManager.setCurrentUsername(username);
+
                 Intent intent = new Intent(this, HomePageActivity.class);
-                intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
                 NoteManager.getInstance(this).init(userManager.getID(username));
+                TaskManager.getInstance(this).init(userManager.getID(username));
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
@@ -71,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             String[] sqlStatements = sqlScript.toString().split(";");
             statement = connection.createStatement();
             for (String sql : sqlStatements) {
-                if (sql.trim().length() > 0) {
+                if (!sql.trim().isEmpty()) {
                     statement.execute(sql);
                 }
             }
