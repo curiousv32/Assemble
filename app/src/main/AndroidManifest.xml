@@ -38,6 +38,14 @@
             android:exported="true">
         </activity>
         <activity
+            android:name="com.example.assemble.activity.UserSettingsActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name="com.example.assemble.activity.UserProfileActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name="com.example.assemble.activity.FlashcardsActivity"
             android:exported="true">
         </activity>

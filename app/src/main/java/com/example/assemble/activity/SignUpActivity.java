@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.assemble.database.DatabaseManager;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
 import com.example.assemble.service.UserManager;
 import com.example.assemble.model.User;
+
+import org.hsqldb.Database;
 
 import java.util.UUID;
 
@@ -24,11 +28,13 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
 
+    private DatabaseManager dbManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
+        dbManager = DatabaseManager.getInstance(this);
         userManager = new UserManager(this);
         User unregisteredUser = new User(UUID.randomUUID() ,STUB_USER, STUB_PASSWORD);
         usernameEditText = findViewById(R.id.username);
@@ -53,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
                 unregisteredUser.setPassword(password);
                 try {
                     if (userManager.addUser(unregisteredUser)) {
+                        dbManager.addUserProfile(username,password);
                         Toast.makeText(SignUpActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
 import com.example.assemble.database.DatabaseManager;
-import com.example.assemble.util.SharedPreferencesManager;
+import com.example.assemble.model.UserProfile;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private EditText confirmPasswordEditText;
     private Button updateButton;
     private DatabaseManager databaseManager;
-    private SharedPreferencesManager sharedPreferencesManager;
+    private String currentUsername; // Store the current username
     private String toastMessage; // Field to store the last shown toast message
 
     @Override
@@ -34,7 +34,9 @@ public class UserProfileActivity extends AppCompatActivity {
         confirmPasswordEditText = findViewById(R.id.editTextConfirmPassword);
         updateButton = findViewById(R.id.buttonUpdate);
         databaseManager = DatabaseManager.getInstance(this);
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+
+        // Assume currentUsername is passed as an Intent extra
+        currentUsername = getIntent().getStringExtra("CURRENT_USERNAME");
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     public String getToastMessage() {
         return toastMessage;
     }
@@ -54,11 +57,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
         if (!newPassword.equals(confirmPassword)) {
             // Show toast message for password mismatch
-            Toast.makeText(UserProfileActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            toastMessage = "Passwords do not match";
+            Toast.makeText(UserProfileActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String currentUsername = sharedPreferencesManager.getCurrentUser();
         if (currentUsername != null) {
             // Delete old profile
             databaseManager.deleteUserProfile(currentUsername);
@@ -66,18 +69,20 @@ public class UserProfileActivity extends AppCompatActivity {
             // Add new profile with updated details
             databaseManager.addUserProfile(newUsername, newPassword);
 
-            // Update shared preferences with new username
-            sharedPreferencesManager.saveCurrentUser(newUsername);
+            // Update currentUsername with new username
+            currentUsername = newUsername;
 
             // Show toast message for successful update
-            Toast.makeText(UserProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+            toastMessage = "Profile updated successfully";
+            Toast.makeText(UserProfileActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
 
             // Navigate back to home page
             Intent intent = new Intent(UserProfileActivity.this, HomePageActivity.class);
+            intent.putExtra("USER_NAME", currentUsername); // Pass updated username to home page
             startActivity(intent);
             finish();
         } else {
-            Log.e("UserProfileActivity", "Current username not found in SharedPreferences");
+            Log.e("UserProfileActivity", "Current username not found");
         }
     }
 }
