@@ -45,8 +45,9 @@ public class LoginActivity extends AppCompatActivity {
 
             if (userManager.validateLogin(username, password)) {
                 UUID userId = userManager.getUUID(username);
-                SessionManager.getInstance().setCurrentUserID(userId);
-                SessionManager.getInstance().setCurrentUsername(username);
+                SessionManager sessionManager = SessionManager.getInstance();
+                sessionManager.setCurrentUserID(userId);
+                sessionManager.setCurrentUsername(username);
 
                 Intent intent = new Intent(this, HomePageActivity.class);
                 startActivity(intent);
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             String[] sqlStatements = sqlScript.toString().split(";");
             statement = connection.createStatement();
             for (String sql : sqlStatements) {
-                if (sql.trim().length() > 0) {
+                if (!sql.trim().isEmpty()) {
                     statement.execute(sql);
                 }
             }

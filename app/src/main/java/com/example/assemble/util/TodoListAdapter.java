@@ -5,20 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assemble.R;
 import com.example.assemble.model.Task;
+import com.example.assemble.service.TaskManager;
 
 import java.util.List;
 
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHolder> {
-    private List<Task> tasks;
+    private static List<Task> tasks;
 
     public TodoListAdapter(List<Task> tasks) {
-        this.tasks = tasks;
+        TodoListAdapter.tasks = tasks;
     }
 
     @NonNull
@@ -44,11 +46,12 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
 
     @SuppressLint("NotifyDataSetChanged")
     public void setTasks(List<Task> newTasks) {
-        this.tasks = newTasks;
+        tasks = newTasks;
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public View deleteButton;
         TextView taskTitle, taskDescription, taskDeadline, taskPriority;
 
         public ViewHolder(View itemView) {
@@ -57,6 +60,19 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
             taskDescription = itemView.findViewById(R.id.taskDescription);
             taskDeadline = itemView.findViewById(R.id.taskDeadline);
             taskPriority = itemView.findViewById(R.id.taskPriority);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+
+            deleteButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Task task = tasks.get(position);
+                    TaskManager.getInstance(itemView.getContext()).delete(task.getId());
+                    tasks.remove(position);
+                    notifyItemRemoved(position);
+                    Toast.makeText(itemView.getContext(), "Task deleted", Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }
     }
 }
