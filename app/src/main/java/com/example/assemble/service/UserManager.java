@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class UserManager implements IUserManager{
+public class UserManager implements IUserManager {
     private static final String SHARED_PREF_NAME = "AssemblePrefs";
     private SharedPreferences sharedPreferences;
     private DatabaseManager dbManager;
@@ -27,6 +27,18 @@ public class UserManager implements IUserManager{
         this.dbManager = DatabaseManager.getInstance(context);
         this.useSQLDatabase = usingSQLDatabase();
     }
+
+    // Add this method to get the current user ID
+    public String getCurrentUserId() {
+        // Retrieve the current username from the session
+        String currentUsername = SessionManager.getInstance().getCurrentUsername();
+        if (currentUsername != null && !currentUsername.isEmpty()) {
+            return getID(currentUsername);
+        }
+        return null;
+    }
+
+    // Other methods...
 
     public boolean addUser(User user) {
         try {
@@ -57,7 +69,6 @@ public class UserManager implements IUserManager{
             editor.apply();
         }
     }
-
 
     @Override
     public User get(UUID userId, Class<User> type) {
@@ -178,7 +189,7 @@ public class UserManager implements IUserManager{
     public String getUsername(String userName) {
         if (useSQLDatabase) {
             return userName;
-        }else{
+        } else {
             return sharedPreferences.getString(userName + "_username", "DatabaseManager.STUB_USER");
         }
     }
@@ -237,7 +248,7 @@ public class UserManager implements IUserManager{
         return id.isEmpty() ? null : UUID.fromString(id);
     }
 
-    public static String getSHARED_PREF_NAME(){
+    public static String getSHARED_PREF_NAME() {
         return SHARED_PREF_NAME;
     }
 }

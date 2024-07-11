@@ -14,8 +14,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
-import com.example.assemble.database.DatabaseManager;
-import com.example.assemble.model.UserProfile;
+import com.example.assemble.model.User;
+import com.example.assemble.service.UserManager;
+
+import java.util.UUID;
 
 public class UserSettingsActivity extends AppCompatActivity {
 
@@ -24,10 +26,11 @@ public class UserSettingsActivity extends AppCompatActivity {
     private Button saveButton;
     private Button updateButton;
     private Button logoutButton;
-    private DatabaseManager databaseManager;
+    private UserManager userManager;
+
     private static final String TAG = "UserSettingsActivity";
     private boolean isPasswordVisible = false;
-    private String currentUsername; // Store the current username
+    private UUID currentUserId; // Store the current user ID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +43,29 @@ public class UserSettingsActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.buttonSave);
         updateButton = findViewById(R.id.buttonUpdate);
         logoutButton = findViewById(R.id.buttonLogout);
-        databaseManager = DatabaseManager.getInstance(this);
-        databaseManager.createUserProfileTable();
+        userManager = new UserManager(this);
 
-        // Assume currentUsername is passed as an Intent extra
-        currentUsername = getIntent().getStringExtra("CURRENT_USERNAME");
+        // Assume currentUserId is passed as an Intent extra
+        String currentUserIdString = getIntent().getStringExtra("CURRENT_USER_ID");
+
+        // Check if currentUserIdString is null or empty
+        if (currentUserIdString == null || currentUserIdString.isEmpty()) {
+            Log.e(TAG, "User ID is null or empty");
+            Toast.makeText(this, "User ID is invalid. Please log in again.", Toast.LENGTH_SHORT).show();
+            navigateToLogin();
+            return;
+        }
+
+        try {
+            currentUserId = UUID.fromString(currentUserIdString);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Invalid User ID format: " + currentUserIdString, e);
+            Toast.makeText(this, "User ID is invalid. Please log in again.", Toast.LENGTH_SHORT).show();
+            navigateToLogin();
+            return;
+        }
+
+        Log.d(TAG, "onCreate: Received currentUserId: " + currentUserId);
 
         loadUserProfile();
 
@@ -107,17 +128,21 @@ public class UserSettingsActivity extends AppCompatActivity {
     private void loadUserProfile() {
         Log.d(TAG, "loadUserProfile: Loading user profile");
 
-        if (currentUsername != null) {
-            UserProfile userProfile = databaseManager.getUserProfile(currentUsername);
+        if (currentUserId != null) {
+            User userProfile = userManager.get(currentUserId, User.class);
             if (userProfile != null) {
-                Log.d(TAG, "loadUserProfile: Loaded user profile from database - Username: " + userProfile.getUsername() + ", Password: " + userProfile.getPassword());
+                Log.d(TAG, "loadUserProfile: Loaded user profile - Username: " + userProfile.getUsername() + ", Password: " + userProfile.getPassword());
                 usernameEditText.setText(userProfile.getUsername());
                 passwordEditText.setText(userProfile.getPassword());
             } else {
                 Log.d(TAG, "loadUserProfile: User profile is null");
+                Toast.makeText(this, "User profile not found. Please log in again.", Toast.LENGTH_SHORT).show();
+                navigateToLogin();
             }
         } else {
-            Log.e(TAG, "loadUserProfile: Current username not found");
+            Log.e(TAG, "loadUserProfile: Current user ID not found");
+            Toast.makeText(this, "User ID is invalid. Please log in again.", Toast.LENGTH_SHORT).show();
+            navigateToLogin();
         }
     }
 
@@ -127,32 +152,32 @@ public class UserSettingsActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         Log.d(TAG, "saveUserProfile: Username: " + username + ", Password: " + password);
 
-        UserProfile userProfile = new UserProfile();
-        userProfile.setUsername(username);
-        userProfile.setPassword(password);
-
-        databaseManager.updateUserProfile(currentUsername, username, password);
-
-        // Update currentUsername with new username
-        currentUsername = username;
+        User userProfile = new User(currentUserId, username, password);
+        userManager.update(currentUserId, userProfile);
 
         Toast.makeText(UserSettingsActivity.this, "Profile saved successfully", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(UserSettingsActivity.this, HomePageActivity.class);
-        intent.putExtra("USER_NAME", currentUsername); // Pass updated username to home page
+        intent.putExtra("USER_NAME", username); // Pass updated username to home page
         startActivity(intent);
         finish();
     }
 
     private void navigateToUserProfile() {
         Intent intent = new Intent(UserSettingsActivity.this, UserProfileActivity.class);
-        intent.putExtra("CURRENT_USERNAME", currentUsername); // Pass current username to UserProfileActivity
+        intent.putExtra("CURRENT_USER_ID", currentUserId.toString()); // Pass current user ID to UserProfileActivity
         startActivity(intent);
     }
 
     private void logoutUser() {
         // No need to clear SharedPreferences, just navigate to LoginActivity
         startActivity(new Intent(UserSettingsActivity.this, LoginActivity.class));
+        finish();
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(UserSettingsActivity.this, LoginActivity.class);
+        startActivity(intent);
         finish();
     }
 }

@@ -11,8 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
-import com.example.assemble.database.DatabaseManager;
-import com.example.assemble.model.UserProfile;
+import com.example.assemble.service.UserManager;
+import com.example.assemble.model.User;
+
+import java.util.UUID;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -20,8 +22,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private EditText newPasswordEditText;
     private EditText confirmPasswordEditText;
     private Button updateButton;
-    private DatabaseManager databaseManager;
-    private String currentUsername; // Store the current username
+    private UserManager userManager;
+    private String currentUserId; // Store the current user ID
     private String toastMessage; // Field to store the last shown toast message
 
     @Override
@@ -33,10 +35,10 @@ public class UserProfileActivity extends AppCompatActivity {
         newPasswordEditText = findViewById(R.id.editTextNewPassword);
         confirmPasswordEditText = findViewById(R.id.editTextConfirmPassword);
         updateButton = findViewById(R.id.buttonUpdate);
-        databaseManager = DatabaseManager.getInstance(this);
+        userManager = new UserManager(this);
 
-        // Assume currentUsername is passed as an Intent extra
-        currentUsername = getIntent().getStringExtra("CURRENT_USERNAME");
+        // Assume currentUserId is passed as an Intent extra
+        currentUserId = getIntent().getStringExtra("CURRENT_USER_ID");
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,15 +64,10 @@ public class UserProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (currentUsername != null) {
-            // Delete old profile
-            databaseManager.deleteUserProfile(currentUsername);
-
-            // Add new profile with updated details
-            databaseManager.addUserProfile(newUsername, newPassword);
-
-            // Update currentUsername with new username
-            currentUsername = newUsername;
+        if (currentUserId != null) {
+            // Create a new User object with updated details
+            UUID userId = UUID.fromString(currentUserId);
+            userManager.update(userId, new User(userId, newUsername, newPassword));
 
             // Show toast message for successful update
             toastMessage = "Profile updated successfully";
@@ -78,11 +75,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
             // Navigate back to home page
             Intent intent = new Intent(UserProfileActivity.this, HomePageActivity.class);
-            intent.putExtra("USER_NAME", currentUsername); // Pass updated username to home page
+            intent.putExtra("USER_NAME", newUsername); // Pass updated username to home page
             startActivity(intent);
             finish();
         } else {
-            Log.e("UserProfileActivity", "Current username not found");
+            Log.e("UserProfileActivity", "Current user ID not found");
         }
     }
 }

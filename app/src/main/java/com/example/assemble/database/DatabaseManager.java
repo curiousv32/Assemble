@@ -9,6 +9,7 @@ import com.example.assemble.model.UserProfile;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -49,31 +50,6 @@ public class DatabaseManager {
             REFERENCE = new DatabaseManager(context);
         }
         return REFERENCE;
-    }
-
-    public void initDB(){
-        try (Connection connection = DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
-             Statement statement = connection.createStatement()) {
-            // Create Users table
-            String createUsersTableSQL = "CREATE TABLE IF NOT EXISTS users ("
-                    + "id INTEGER IDENTITY PRIMARY KEY,"
-                    + "username VARCHAR(255) NOT NULL UNIQUE,"
-                    + "password VARCHAR(255) NOT NULL"
-                    + ")";
-            statement.executeUpdate(createUsersTableSQL);
-            // Create flashcards table
-            String createFlashcardsTableSQL = "CREATE TABLE IF NOT EXISTS flashcards ("
-                    + "id INTEGER IDENTITY PRIMARY KEY,"
-                    + "username VARCHAR(255) NOT NULL,"
-                    + "question VARCHAR(255) NOT NULL,"
-                    + "answer VARCHAR(255) NOT NULL,"
-                    + "FOREIGN KEY (username) REFERENCES users(username)"
-                    + ")";
-            statement.executeUpdate(createFlashcardsTableSQL);
-            System.out.println("Database setup completed successfully!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public Connection getConnection() throws SQLException {

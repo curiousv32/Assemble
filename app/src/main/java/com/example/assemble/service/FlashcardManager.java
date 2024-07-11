@@ -5,9 +5,7 @@ import static java.sql.DriverManager.getConnection;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.assemble.activity.FlashcardsActivity;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.model.Flashcard;
 

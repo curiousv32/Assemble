@@ -7,9 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.assemble.activity.UserProfileActivity;
 import com.example.assemble.database.DatabaseManager;
-import com.example.assemble.util.SharedPreferencesManager;
+import com.example.assemble.model.User;
+import com.example.assemble.service.UserManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +17,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -35,9 +37,9 @@ public class UserProfileTest {
     @Mock
     private Button mockUpdateButton;
     @Mock
-    private DatabaseManager mockDatabaseManager;
+    private UserManager mockUserManager;
     @Mock
-    private SharedPreferencesManager mockSharedPreferencesManager;
+    private DatabaseManager mockDatabaseManager;
     @Mock
     private Context mockContext;
     @Mock
@@ -47,78 +49,57 @@ public class UserProfileTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        // Mock the context
-        when(mockContext.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(mockToast);
-
-        // Create mocks for DatabaseManager and SharedPreferencesManager
-        mockDatabaseManager = Mockito.mock(DatabaseManager.class);
-        mockSharedPreferencesManager = Mockito.mock(SharedPreferencesManager.class);
-
+        // Mock the context and other necessary components
         userProfileActivity = Mockito.spy(new UserProfileActivity());
         Mockito.doReturn(mockNewUsernameEditText).when(userProfileActivity).findViewById(Mockito.anyInt());
         Mockito.doReturn(mockNewPasswordEditText).when(userProfileActivity).findViewById(Mockito.anyInt());
         Mockito.doReturn(mockConfirmPasswordEditText).when(userProfileActivity).findViewById(Mockito.anyInt());
-
-        // Mocking direct access to the DatabaseManager and SharedPreferencesManager
-        try {
-            java.lang.reflect.Field field = UserProfileActivity.class.getDeclaredField("databaseManager");
-            field.setAccessible(true);
-            field.set(userProfileActivity, mockDatabaseManager);
-
-            field = UserProfileActivity.class.getDeclaredField("sharedPreferencesManager");
-            field.setAccessible(true);
-            field.set(userProfileActivity, mockSharedPreferencesManager);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
+        Mockito.doReturn(mockUpdateButton).when(userProfileActivity).findViewById(R.id.buttonUpdate);
         Mockito.doReturn(mockContext).when(userProfileActivity).getApplicationContext();
+
+        // Set up UserManager mock
+        userProfileActivity.userManager = mockUserManager;
 
         // Stub methods as needed
         when(mockNewUsernameEditText.getText()).thenReturn((Editable) Mockito.mock(CharSequence.class));
+        when(mockNewUsernameEditText.getText().toString()).thenReturn("newUsername");
         when(mockNewPasswordEditText.getText()).thenReturn((Editable) Mockito.mock(CharSequence.class));
+        when(mockNewPasswordEditText.getText().toString()).thenReturn("newPassword");
         when(mockConfirmPasswordEditText.getText()).thenReturn((Editable) Mockito.mock(CharSequence.class));
+        when(mockConfirmPasswordEditText.getText().toString()).thenReturn("newPassword");
     }
 
     @Test
     public void testUpdateUserProfile_Success() {
-        // Mock inputs
-        when(mockNewUsernameEditText.getText().toString()).thenReturn("newUsername");
-        when(mockNewPasswordEditText.getText().toString()).thenReturn("newPassword");
-        when(mockConfirmPasswordEditText.getText().toString()).thenReturn("newPassword");
-        when(mockSharedPreferencesManager.getCurrentUser()).thenReturn("currentUsername");
+        // Mock currentUserId
+        String currentUserId = "123e4567-e89b-12d3-a456-556642440000";
 
-        // Mock the delete and add operations
-        Mockito.doNothing().when(mockDatabaseManager).deleteUserProfile(Mockito.anyString());
-        Mockito.doNothing().when(mockDatabaseManager).addUserProfile(Mockito.anyString(), Mockito.anyString());
-
-        // Mock the shared preferences save
-        Mockito.doNothing().when(mockSharedPreferencesManager).saveCurrentUser(Mockito.anyString());
-
-        // Mock the startActivity method
-        ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
-        Mockito.doNothing().when(userProfileActivity).startActivity(intentCaptor.capture());
-        Mockito.doNothing().when(userProfileActivity).finish();
+        // Set currentUserId in activity
+        Intent intent = new Intent();
+        intent.putExtra("CURRENT_USER_ID", currentUserId);
+        Mockito.doReturn(intent).when(userProfileActivity).getIntent();
 
         // Call the method under test
         userProfileActivity.updateUserProfile();
 
-        // Verify interactions
-        verify(mockToast).makeText(Mockito.any(), Mockito.anyInt(), Mockito.anyInt());
-        verify(mockDatabaseManager).deleteUserProfile("currentUsername");
-        verify(mockDatabaseManager).addUserProfile("newUsername", "newPassword");
-        verify(mockSharedPreferencesManager).saveCurrentUser("newUsername");
+        // Verify UserManager interactions
+        UUID userId = UUID.fromString(currentUserId);
+        verify(mockUserManager).update(userId, new User(userId, "newUsername", "newPassword"));
+
+        // Verify toast message for successful update
+        verify(mockToast).makeText(userProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT);
 
         // Verify navigation
+        ArgumentCaptor<Intent> intentCaptor = ArgumentCaptor.forClass(Intent.class);
+        Mockito.verify(userProfileActivity).startActivity(intentCaptor.capture());
         Intent capturedIntent = intentCaptor.getValue();
         assertEquals(HomePageActivity.class.getName(), capturedIntent.getComponent().getClassName());
+        assertEquals("newUsername", capturedIntent.getStringExtra("USER_NAME"));
     }
 
     @Test
     public void testUpdateUserProfile_PasswordMismatch() {
         // Mock inputs
-        when(mockNewUsernameEditText.getText().toString()).thenReturn("newUsername");
-        when(mockNewPasswordEditText.getText().toString()).thenReturn("newPassword");
         when(mockConfirmPasswordEditText.getText().toString()).thenReturn("differentPassword");
 
         // Call the method under test
