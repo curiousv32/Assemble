@@ -18,4 +18,13 @@
     <string name="new_password">new password</string>
     <string name="new_username">new username</string>
     <string name="toggle_password_visibility">Toggle Password Visibility</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task Description</string>
+    <string name="task_deadline">Task Deadline</string>
+    <string name="submit">Save</string>
+    <string name="todo_list">Todo List</string>
+    <string name="add_task">Add Task</string>
+    <string name="task_priority">Priority</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>

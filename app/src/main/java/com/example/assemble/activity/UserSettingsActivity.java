@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.model.UserProfile;
-import com.example.assemble.util.SharedPreferencesManager;
 
 public class UserSettingsActivity extends AppCompatActivity {
 
@@ -26,9 +25,9 @@ public class UserSettingsActivity extends AppCompatActivity {
     private Button updateButton;
     private Button logoutButton;
     private DatabaseManager databaseManager;
-    private SharedPreferencesManager sharedPreferencesManager;
     private static final String TAG = "UserSettingsActivity";
     private boolean isPasswordVisible = false;
+    private String currentUsername; // Store the current username
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,9 @@ public class UserSettingsActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.buttonLogout);
         databaseManager = DatabaseManager.getInstance(this);
         databaseManager.createUserProfileTable();
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+
+        // Assume currentUsername is passed as an Intent extra
+        currentUsername = getIntent().getStringExtra("CURRENT_USERNAME");
 
         loadUserProfile();
 
@@ -105,11 +106,9 @@ public class UserSettingsActivity extends AppCompatActivity {
 
     private void loadUserProfile() {
         Log.d(TAG, "loadUserProfile: Loading user profile");
-        String currentUser = sharedPreferencesManager.getCurrentUser();
-        Log.d(TAG, "loadUserProfile: Loaded current user from prefs: " + currentUser);
 
-        if (currentUser != null) {
-            UserProfile userProfile = databaseManager.getUserProfile(currentUser);
+        if (currentUsername != null) {
+            UserProfile userProfile = databaseManager.getUserProfile(currentUsername);
             if (userProfile != null) {
                 Log.d(TAG, "loadUserProfile: Loaded user profile from database - Username: " + userProfile.getUsername() + ", Password: " + userProfile.getPassword());
                 usernameEditText.setText(userProfile.getUsername());
@@ -118,7 +117,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                 Log.d(TAG, "loadUserProfile: User profile is null");
             }
         } else {
-            Log.d(TAG, "loadUserProfile: Current user is null in shared preferences");
+            Log.e(TAG, "loadUserProfile: Current username not found");
         }
     }
 
@@ -132,22 +131,27 @@ public class UserSettingsActivity extends AppCompatActivity {
         userProfile.setUsername(username);
         userProfile.setPassword(password);
 
-        databaseManager.updateUserProfile(username, username, password);
+        databaseManager.updateUserProfile(currentUsername, username, password);
+
+        // Update currentUsername with new username
+        currentUsername = username;
 
         Toast.makeText(UserSettingsActivity.this, "Profile saved successfully", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(UserSettingsActivity.this, HomePageActivity.class);
+        intent.putExtra("USER_NAME", currentUsername); // Pass updated username to home page
         startActivity(intent);
         finish();
     }
 
     private void navigateToUserProfile() {
         Intent intent = new Intent(UserSettingsActivity.this, UserProfileActivity.class);
+        intent.putExtra("CURRENT_USERNAME", currentUsername); // Pass current username to UserProfileActivity
         startActivity(intent);
     }
 
     private void logoutUser() {
-        getSharedPreferences("user_prefs", Context.MODE_PRIVATE).edit().clear().apply();
+        // No need to clear SharedPreferences, just navigate to LoginActivity
         startActivity(new Intent(UserSettingsActivity.this, LoginActivity.class));
         finish();
     }

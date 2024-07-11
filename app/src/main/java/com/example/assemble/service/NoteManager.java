@@ -3,7 +3,6 @@ package com.example.assemble.service;
 import static com.example.assemble.database.DatabaseManager.usingSQLDatabase;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
@@ -30,6 +29,7 @@ public class NoteManager implements INoteManager {
     private HashMap<UUID, Note> notes;
     private Note openedNote;
     private boolean useSQLDatabase;
+    private String ownerId;
 
     public static final String STUB_NOTE_NAME = "stub";
 
@@ -49,6 +49,7 @@ public class NoteManager implements INoteManager {
     public HashMap<UUID, Note> init(String ownerUUID) {
         notes.clear();
         List<Note> notesList;
+        this.ownerId = ownerUUID;
         if (!useSQLDatabase) {
             notesList = stubNote;
         } else {
@@ -76,13 +77,14 @@ public class NoteManager implements INoteManager {
             notes.put(note.getID(), note);
             return;
         }
-        dbManager.runQuery(
-                "INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)",
+        dbManager.runUpdateQuery(
+                "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
                 note.getID().toString(),
                 note.getName(),
                 new java.sql.Timestamp(note.getCreationDate().getTime()),
                 new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
-                note.getText()
+                note.getText(),
+                ownerId
         );
         notes.put(note.getID(), note);
     }
@@ -122,7 +124,7 @@ public class NoteManager implements INoteManager {
     public void update(UUID noteId, Note note) {
 
         if (useSQLDatabase) {
-            dbManager.runQuery(
+            dbManager.runUpdateQuery(
                     "UPDATE notes SET name=?, last_updated_date=CURRENT_TIMESTAMP, content=? WHERE id = ?",
                     note.getName(),
                     note.getText(),
@@ -140,7 +142,7 @@ public class NoteManager implements INoteManager {
             return;
         }
 
-        dbManager.runQuery("DELETE FROM notes WHERE id=?", noteId.toString());
+        dbManager.runUpdateQuery("DELETE FROM notes WHERE id=?", noteId.toString());
         notes.remove(noteId);
     }
 
@@ -169,7 +171,8 @@ public class NoteManager implements INoteManager {
     public List<Note> getUserNotesFromDB(String ownerUUID) {
         List<Note> notes = new ArrayList<>();
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes")) {
+             PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes WHERE owner_id = ?")) {
+            pstmt.setString(1, ownerUUID);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Note note = new Note(UUID.fromString(rs.getString("id")), rs.getString("name"));

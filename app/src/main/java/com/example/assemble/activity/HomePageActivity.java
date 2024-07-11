@@ -7,47 +7,50 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
+import com.example.assemble.service.SessionManager;
 
 public class HomePageActivity extends AppCompatActivity {
-
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
 
-        String userName = getIntent().getStringExtra("USER_NAME");
+        username = SessionManager.getInstance().getCurrentUsername();
 
         // Find the welcome TextView and update it with the user's name
         TextView welcomeTextView = findViewById(R.id.textView3);
-        if (userName != null && !userName.isEmpty()) {
-            String welcomeMessage = getString(R.string.welcome_message, userName);
+        if (username != null && !username.isEmpty()) {
+            String welcomeMessage = getString(R.string.welcome_message, username);
             welcomeTextView.setText(welcomeMessage);
         }
 
         // Find buttons by their IDs
         Button noteButton = findViewById(R.id.button);
-        Button listButton = findViewById(R.id.button2);
+        Button todolistButton = findViewById(R.id.button2);
         Button flashcardButton = findViewById(R.id.button3);
+        AppCompatImageButton settingsButton = findViewById(R.id.settingsButton);
 
         // Set click listeners for buttons
         noteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NoteActivity.class);
+            Intent intent = new Intent(this, NoteListsActivity.class);
             startActivity(intent);
         });
 
-        listButton.setOnClickListener(v -> {
-            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+        todolistButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TodoListActivity.class);
+            startActivity(intent);
         });
 
         flashcardButton.setOnClickListener(v -> {
-            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, FlashcardsActivity.class);
+            intent.putExtra("USER_NAME", username);
+            startActivity(intent);
         });
-
         // Set click listener for settings icon
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, UserSettingsActivity.class);
             startActivity(intent);
         });
-
     }
 }

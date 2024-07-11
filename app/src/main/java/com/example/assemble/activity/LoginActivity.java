@@ -7,12 +7,25 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
-import com.example.assemble.notes.NoteManager;
-import com.example.assemble.util.SharedPreferencesManager;
+import com.example.assemble.service.SessionManager;
+import com.example.assemble.service.TaskManager;
+import com.example.assemble.database.DatabaseManager;
+import com.example.assemble.service.UserManager;
+import com.example.assemble.service.NoteManager;
+
+import java.util.UUID;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private UserManager userManager;
     private EditText usernameEditText;
     private EditText passwordEditText;
 
@@ -21,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+        userManager = new UserManager(this);
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
@@ -31,23 +44,56 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             if (userManager.validateLogin(username, password)) {
-                // Save the username and password in SharedPreferences
-                sharedPreferencesManager.saveCurrentUser(username);
+                UUID userId = userManager.getUUID(username);
+                SessionManager sessionManager = SessionManager.getInstance();
+                sessionManager.setCurrentUserID(userId);
+                sessionManager.setCurrentUsername(username);
+
                 Intent intent = new Intent(this, HomePageActivity.class);
-                intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
-                NoteManager.getInstance(this).init(sharedPreferencesManager.getID());
+                NoteManager.getInstance(this).init(userManager.getID(username));
+                TaskManager.getInstance(this).init(userManager.getID(username));
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
         });
+        initializeDb();
     }
 
-    private boolean validateLogin(String username, String password) {
-        String storedUsername = sharedPreferencesManager.getUsername(username);
-        String storedPassword = sharedPreferencesManager.getPassword(password);
+    private void initializeDb() {
+        DatabaseManager dbManager = DatabaseManager.getInstance(this);
+        Statement statement = null;
+        Connection connection = null;
 
-        return username.equals(storedUsername) && password.equals(storedPassword);
+        try {
+            connection = dbManager.getConnection();
+            InputStream inputStream = getAssets().open("db/initializeDb.script");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sqlScript = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sqlScript.append(line).append('\n');
+            }
+            reader.close();
+
+            // Split the script into individual statements and execute them
+            String[] sqlStatements = sqlScript.toString().split(";");
+            statement = connection.createStatement();
+            for (String sql : sqlStatements) {
+                if (!sql.trim().isEmpty()) {
+                    statement.execute(sql);
+                }
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onRegisterClick(View view) {
