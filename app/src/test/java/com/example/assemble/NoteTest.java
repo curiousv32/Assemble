@@ -27,14 +27,21 @@ public class NoteTest {
     }
 
     @Test
-    public void text_set_and_get() {
+    public void test_set_and_get() {
         assertEquals(note.getText(), "");
 
         String newText = "new text";
         Date lastUpdated = note.getLastUpdatedDate();
 
-        note.setText(newText);
+        // Sleep for 100ms to ensure lastUpdatedDate is different
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
+        note.setText(newText);
+        note.setLastUpdatedDate();
         assertEquals(note.getText(), newText);
         assertNotEquals(lastUpdated, note.getLastUpdatedDate());
     }

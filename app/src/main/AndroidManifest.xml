@@ -30,18 +30,17 @@
             android:exported="true">
         </activity>
         <activity
+            android:name="com.example.assemble.activity.NoteListsActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name="com.example.assemble.activity.HomePageActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name="com.example.assemble.activity.UserProfileActivity"
+            android:name="com.example.assemble.activity.FlashcardsActivity"
             android:exported="true">
         </activity>
-        <activity
-            android:name="com.example.assemble.activity.UserSettingsActivity"
-            android:exported="true">
-        </activity>
-
     </application>
 
 </manifest>

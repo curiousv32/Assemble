@@ -6,23 +6,30 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
-
 import com.example.assemble.R;
+import com.example.assemble.database.DatabaseManager;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class HomePageActivity extends AppCompatActivity {
-
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
 
-        String userName = getIntent().getStringExtra("USER_NAME");
+        username = getIntent().getStringExtra("USER_NAME");
 
         // Find the welcome TextView and update it with the user's name
         TextView welcomeTextView = findViewById(R.id.textView3);
-        if (userName != null && !userName.isEmpty()) {
-            String welcomeMessage = getString(R.string.welcome_message, userName);
+        if (username != null && !username.isEmpty()) {
+            String welcomeMessage = getString(R.string.welcome_message, username);
             welcomeTextView.setText(welcomeMessage);
         }
 
@@ -30,11 +37,10 @@ public class HomePageActivity extends AppCompatActivity {
         Button noteButton = findViewById(R.id.button);
         Button listButton = findViewById(R.id.button2);
         Button flashcardButton = findViewById(R.id.button3);
-        AppCompatImageButton settingsButton = findViewById(R.id.settingsButton);
 
         // Set click listeners for buttons
         noteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NoteActivity.class);
+            Intent intent = new Intent(this, NoteListsActivity.class);
             startActivity(intent);
         });
 
@@ -43,14 +49,9 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         flashcardButton.setOnClickListener(v -> {
-            Toast.makeText(HomePageActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-        });
-
-        // Set click listener for settings icon
-        settingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, UserSettingsActivity.class);
+            Intent intent = new Intent(this, FlashcardsActivity.class);
+            intent.putExtra("USER_NAME", username);
             startActivity(intent);
         });
-
     }
 }

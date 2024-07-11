@@ -14,19 +14,28 @@ public class Note {
     public Note(UUID noteUUID, String name) {
         this.noteUUID = noteUUID;
         this.name = name;
+        this.creationDate = new Date();
+        this.lastUpdatedDate = new Date();
     }
 
     public void setCreationDate() {
         this.creationDate = new Date();
     }
 
+    public void setCreationDate(Date date) {
+        this.creationDate = date;
+    }
+
     public void setLastUpdatedDate() {
         this.lastUpdatedDate = new Date();
     }
 
+    public void setLastUpdatedDate(Date date) {
+        this.lastUpdatedDate = date;
+    }
+
     public void setText(String text) {
         this.text = text;
-        setLastUpdatedDate();
     }
 
     public UUID getID() { return noteUUID; }
@@ -38,6 +47,8 @@ public class Note {
     }
 
     public Date getLastUpdatedDate() { return lastUpdatedDate; }
+
+    public Date getCreationDate() { return creationDate; }
 
     public boolean equals(Note other) {
         return noteUUID.toString().equals(other.noteUUID.toString());
