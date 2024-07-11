@@ -18,11 +18,9 @@ import java.util.List;
 
 public class FlashcardManager {
     private static final String SHARED_PREF_NAME = "AssemblePrefs";
-    //private SharedPreferences sharedPreferences;
     private DatabaseManager dbManager;
     private boolean useSQLDatabase;
     public FlashcardManager(Context context) {
-        //this.sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         this.dbManager = DatabaseManager.getInstance(context);
         this.useSQLDatabase = usingSQLDatabase();
     }
@@ -45,8 +43,20 @@ public class FlashcardManager {
         }
     }
 
-    public void removeFlashcard(){
-
+    public void deleteFlashcard(String username, String question) {
+        if (useSQLDatabase) {
+            String sql = "DELETE FROM flashcards WHERE username = ? AND question = ?";
+            try (Connection connection = dbManager.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, question);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                Log.e("database error", "Error deleting flashcard: " + e.getMessage());
+            }
+        } else {
+            // stub implementation
+        }
     }
 
     public List<Flashcard> getFlashcards(String username) {
@@ -74,9 +84,4 @@ public class FlashcardManager {
             return flashcards;
         }
     }
-
-    public void deleteFlashcard(String username, String question){
-
-    }
-
 }

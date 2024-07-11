@@ -22,6 +22,7 @@ public class FlashcardsActivity extends AppCompatActivity {
     private EditText questionEditText;
     private EditText answerEditText;
     private Button addFlashcardButton;
+    private Button deleteFlashcardButton;
     private ListView flashcardsListView;
     private FlashcardsStub flashcardStub;
     private FlashcardManager flashcardManager;
@@ -39,12 +40,13 @@ public class FlashcardsActivity extends AppCompatActivity {
         flashcardStub = new FlashcardsStub();
         flashcardManager = new FlashcardManager(this);
         username = getIntent().getStringExtra("USER_NAME");
+
         addFlashcardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String question = "Question: " + questionEditText.getText().toString();
                 String answer = "Answer: " + answerEditText.getText().toString();
-                flashcardManager.addFlashcard(username,question,answer);
+                flashcardManager.addFlashcard(username, question, answer);
                 Toast.makeText(FlashcardsActivity.this, "Flashcard added", Toast.LENGTH_SHORT).show();
                 loadFlashcards();
             }
@@ -55,7 +57,8 @@ public class FlashcardsActivity extends AppCompatActivity {
 
     private void loadFlashcards() {
         List<Flashcard> flashcards = flashcardManager.getFlashcards(username);
-        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
+        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards, flashcardManager, username);
         flashcardsListView.setAdapter(adapter);
     }
+
 }
