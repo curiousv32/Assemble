@@ -41,6 +41,14 @@
             android:name="com.example.assemble.activity.FlashcardsActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name="com.example.assemble.activity.TodoListActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name="com.example.assemble.activity.TodoFormActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
