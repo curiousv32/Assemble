@@ -3,7 +3,6 @@ package com.example.assemble.service;
 import static com.example.assemble.database.DatabaseManager.usingSQLDatabase;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidNoteException;
@@ -76,7 +75,7 @@ public class NoteManager implements INoteManager {
             notes.put(note.getID(), note);
             return;
         }
-        dbManager.runQuery(
+        dbManager.runUpdateQuery(
                 "INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)",
                 note.getID().toString(),
                 note.getName(),
@@ -122,7 +121,7 @@ public class NoteManager implements INoteManager {
     public void update(UUID noteId, Note note) {
 
         if (useSQLDatabase) {
-            dbManager.runQuery(
+            dbManager.runUpdateQuery(
                     "UPDATE notes SET name=?, last_updated_date=CURRENT_TIMESTAMP, content=? WHERE id = ?",
                     note.getName(),
                     note.getText(),
@@ -140,7 +139,7 @@ public class NoteManager implements INoteManager {
             return;
         }
 
-        dbManager.runQuery("DELETE FROM notes WHERE id=?", noteId.toString());
+        dbManager.runUpdateQuery("DELETE FROM notes WHERE id=?", noteId.toString());
         notes.remove(noteId);
     }
 

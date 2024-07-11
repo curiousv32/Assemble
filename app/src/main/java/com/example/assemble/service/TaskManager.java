@@ -45,7 +45,7 @@ public class TaskManager implements ITaskManager {
         if (!useSQLDatabase) {
             taskList = stubTask;
         } else {
-            taskList = this.getUserTasks(ownerUUID);
+            taskList = this.getUserTasksFromDB(ownerUUID);
         }
         for (Task task : taskList) {
             tasks.put(task.getId(), task);
@@ -53,13 +53,12 @@ public class TaskManager implements ITaskManager {
         return tasks;
     }
 
-    public Task addTask(String title, String description, String deadline, String priority, String status) throws InvalidTaskException {
+    public Task createTask(String title, String description, String deadline, String priority, String status) throws InvalidTaskException {
+        Task task = new Task(UUID.randomUUID(), title, description, new java.util.Date(), priority, status);
         if (!useSQLDatabase) {
-            Task task = new Task(UUID.randomUUID(), title, description, new java.util.Date(), priority, status);
             tasks.put(task.getId(), task);
             return task;
         } else {
-            Task task = new Task(UUID.randomUUID(), title, description, new java.util.Date(), priority, status);
             try {
                 add(task);
             } catch (InvalidTaskException e) {
@@ -75,18 +74,16 @@ public class TaskManager implements ITaskManager {
             tasks.put(task.getId(), task);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO tasks (id, title, description, deadline, priority, status) VALUES (?, ?, ?, ?, ?, ?)")) {
-            pstmt.setString(1, task.getId().toString());
-            pstmt.setString(2, task.getTitle());
-            pstmt.setString(3, task.getDescription());
-            pstmt.setTimestamp(4, new java.sql.Timestamp(task.getDeadline().getTime()));
-            pstmt.setString(5, task.getPriority());
-            pstmt.setString(6, task.getStatus());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        dbManager.runUpdateQuery(
+                "INSERT INTO tasks (id, title, description, deadline, priority, status) VALUES (?, ?, ?, ?, ?, ?)",
+                task.getId().toString(),
+                task.getTitle(),
+                task.getDescription(),
+                new java.sql.Timestamp(task.getDeadline().getTime()),
+                task.getPriority(),
+                task.getStatus()
+        );
         tasks.put(task.getId(), task);
     }
 
@@ -118,18 +115,16 @@ public class TaskManager implements ITaskManager {
             tasks.put(taskId, task);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("UPDATE tasks SET title = ?, description = ?, deadline = ?, priority = ?, status = ? WHERE id = ?")) {
-            pstmt.setString(1, task.getTitle());
-            pstmt.setString(2, task.getDescription());
-            pstmt.setTimestamp(3, new java.sql.Timestamp(task.getDeadline().getTime()));
-            pstmt.setString(4, task.getPriority());
-            pstmt.setString(5, task.getStatus());
-            pstmt.setString(6, taskId.toString());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        dbManager.runUpdateQuery(
+                "UPDATE tasks SET title = ?, description = ?, deadline = ?, priority = ?, status = ? WHERE id = ?",
+                task.getTitle(),
+                task.getDescription(),
+                new java.sql.Timestamp(task.getDeadline().getTime()),
+                task.getPriority(),
+                task.getStatus(),
+                taskId.toString()
+        );
         tasks.put(taskId, task);
     }
 
@@ -139,13 +134,8 @@ public class TaskManager implements ITaskManager {
             tasks.remove(taskId);
             return;
         }
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
-            pstmt.setString(1, taskId.toString());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        dbManager.runUpdateQuery("DELETE FROM tasks WHERE id=?", taskId.toString());
         tasks.remove(taskId);
     }
 
@@ -180,19 +170,21 @@ public class TaskManager implements ITaskManager {
     }
 
     private List<Task> stubTask = new ArrayList<Task>() {{
-        add(new Task(UUID.randomUUID(), "Stub Task", "This is a stub task description", new java.util.Date(), "High", "Pending"));
+        add(new Task(UUID.randomUUID(), "Stub Task", "Stub task description", new java.util.Date(), "High", "Pending"));
     }};
 
     public List<Task> getAllTasks(String ownerUUID) {
-        tasks.clear();
-        List<Task> taskList = updateTaskListFromDB(ownerUUID);
-        for (Task task : taskList) {
-            tasks.put(task.getId(), task);
+        if(useSQLDatabase){
+            tasks.clear();
+            List<Task> taskList = getUserTasksFromDB(ownerUUID);
+            for (Task task : taskList) {
+                tasks.put(task.getId(), task);
+            }
         }
-        return taskList;
+        return new ArrayList<>(tasks.values());
     }
 
-    private List<Task> updateTaskListFromDB(String ownerUUID) {
+    private List<Task> getUserTasksFromDB(String ownerUUID) {
         tasks.clear();
         List<Task> taskList = getUserTasks(ownerUUID);
         for (Task task : taskList) {

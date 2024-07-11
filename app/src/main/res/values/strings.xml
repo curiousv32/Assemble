@@ -12,4 +12,6 @@
     <string name="task_description">Task Description</string>
     <string name="task_deadline">Task Deadline</string>
     <string name="submit">Save</string>
+    <string name="todo_list">Todo List</string>
+    <string name="add_task">Add Task</string>
 </resources>

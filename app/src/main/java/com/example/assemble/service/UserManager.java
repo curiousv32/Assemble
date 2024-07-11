@@ -43,7 +43,7 @@ public class UserManager implements IUserManager{
             throw new InvalidUserException("Username already exists");
         }
         if (useSQLDatabase) {
-            dbManager.runQuery("INSERT INTO users (id, username, password) VALUES (?, ?, ?)",
+            dbManager.runUpdateQuery("INSERT INTO users (id, username, password) VALUES (?, ?, ?)",
                     user.getId().toString(),
                     user.getUsername(),
                     user.getPassword()
@@ -57,6 +57,7 @@ public class UserManager implements IUserManager{
             editor.apply();
         }
     }
+
 
     @Override
     public User get(UUID userId, Class<User> type) {
@@ -89,7 +90,7 @@ public class UserManager implements IUserManager{
     @Override
     public void delete(UUID userId) {
         if (useSQLDatabase) {
-            dbManager.runQuery("DELETE FROM users WHERE id=?", userId.toString());
+            dbManager.runUpdateQuery("DELETE FROM users WHERE id=?", userId.toString());
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(userId.toString() + "_username");
@@ -101,7 +102,7 @@ public class UserManager implements IUserManager{
     @Override
     public void update(UUID userId, User user) {
         if (useSQLDatabase) {
-            dbManager.runQuery(
+            dbManager.runUpdateQuery(
                     "UPDATE users SET username = ?, password = ? WHERE id = ?",
                     user.getUsername(),
                     user.getPassword(),
@@ -132,6 +133,8 @@ public class UserManager implements IUserManager{
             return false;
         } else {
             String storedPassword = getPassword(username);
+            if(storedPassword == null)
+                return false;
             return storedPassword.equals(password);
         }
     }
@@ -221,7 +224,7 @@ public class UserManager implements IUserManager{
 
     public void cleanUsers() {
         if (useSQLDatabase) {
-            dbManager.runQuery("DELETE FROM users");
+            dbManager.runUpdateQuery("DELETE FROM users");
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();

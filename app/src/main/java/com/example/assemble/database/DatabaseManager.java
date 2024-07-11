@@ -3,13 +3,10 @@ package com.example.assemble.database;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.assemble.model.Flashcard;
 import com.example.assemble.model.Note;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -132,7 +129,7 @@ public class DatabaseManager {
         }
     }
 
-    public void runQuery(String query, Object... parameters) {
+    public void runUpdateQuery(String query, Object... parameters) {
         try (Connection conn = getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
 
