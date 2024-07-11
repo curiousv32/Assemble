@@ -23,6 +23,7 @@ public class TaskManager implements ITaskManager {
     private DatabaseManager dbManager;
     private HashMap<UUID, Task> tasks;
     private boolean useSQLDatabase;
+    private String ownerId;
 
     public static final String STUB_TASK_NAME = "stub";
 
@@ -42,6 +43,7 @@ public class TaskManager implements ITaskManager {
     public HashMap<UUID, Task> init(String ownerUUID) {
         tasks.clear();
         List<Task> taskList;
+        this.ownerId = ownerUUID;
         if (!useSQLDatabase) {
             taskList = stubTask;
         } else {
@@ -76,13 +78,14 @@ public class TaskManager implements ITaskManager {
         }
 
         dbManager.runUpdateQuery(
-                "INSERT INTO tasks (id, title, description, deadline, priority, status) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO tasks (id, title, description, deadline, priority, status, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 task.getId().toString(),
                 task.getTitle(),
                 task.getDescription(),
                 new java.sql.Timestamp(task.getDeadline().getTime()),
                 task.getPriority(),
-                task.getStatus()
+                task.getStatus(),
+                ownerId
         );
         tasks.put(task.getId(), task);
     }
@@ -154,7 +157,8 @@ public class TaskManager implements ITaskManager {
     public List<Task> getUserTasks(String ownerUUID) {
         List<Task> tasks = new ArrayList<>();
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT id, title, description, deadline, priority, status FROM tasks")) {
+             PreparedStatement pstmt = conn.prepareStatement("SELECT id, title, description, deadline, priority, status FROM tasks WHERE owner_id = ?")) {
+            pstmt.setString(1, ownerUUID);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Task task = new Task(UUID.fromString(rs.getString("id")),

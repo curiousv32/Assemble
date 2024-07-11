@@ -29,6 +29,7 @@ public class NoteManager implements INoteManager {
     private HashMap<UUID, Note> notes;
     private Note openedNote;
     private boolean useSQLDatabase;
+    private String ownerId;
 
     public static final String STUB_NOTE_NAME = "stub";
 
@@ -48,6 +49,7 @@ public class NoteManager implements INoteManager {
     public HashMap<UUID, Note> init(String ownerUUID) {
         notes.clear();
         List<Note> notesList;
+        this.ownerId = ownerUUID;
         if (!useSQLDatabase) {
             notesList = stubNote;
         } else {
@@ -76,12 +78,13 @@ public class NoteManager implements INoteManager {
             return;
         }
         dbManager.runUpdateQuery(
-                "INSERT INTO notes (id, name, creation_date, last_updated_date, content) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
                 note.getID().toString(),
                 note.getName(),
                 new java.sql.Timestamp(note.getCreationDate().getTime()),
                 new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
-                note.getText()
+                note.getText(),
+                ownerId
         );
         notes.put(note.getID(), note);
     }
@@ -168,7 +171,8 @@ public class NoteManager implements INoteManager {
     public List<Note> getUserNotesFromDB(String ownerUUID) {
         List<Note> notes = new ArrayList<>();
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes")) {
+             PreparedStatement pstmt = conn.prepareStatement("SELECT id, name, creation_date, last_updated_date, content FROM notes WHERE owner_id = ?")) {
+            pstmt.setString(1, ownerUUID);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Note note = new Note(UUID.fromString(rs.getString("id")), rs.getString("name"));
