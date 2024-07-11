@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
-
 import com.example.assemble.R;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -30,7 +28,6 @@ public class HomePageActivity extends AppCompatActivity {
         Button noteButton = findViewById(R.id.button);
         Button listButton = findViewById(R.id.button2);
         Button flashcardButton = findViewById(R.id.button3);
-        AppCompatImageButton settingsButton = findViewById(R.id.settingsButton);
 
         // Set click listeners for buttons
         noteButton.setOnClickListener(v -> {

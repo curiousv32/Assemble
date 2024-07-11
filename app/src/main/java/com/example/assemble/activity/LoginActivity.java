@@ -30,10 +30,9 @@ public class LoginActivity extends AppCompatActivity {
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
 
-            if (validateLogin(username, password)) {
+            if (userManager.validateLogin(username, password)) {
                 // Save the username and password in SharedPreferences
                 sharedPreferencesManager.saveCurrentUser(username);
-
                 Intent intent = new Intent(this, HomePageActivity.class);
                 intent.putExtra("USER_NAME", username); // Pass the username to HomePageActivity
                 startActivity(intent);
