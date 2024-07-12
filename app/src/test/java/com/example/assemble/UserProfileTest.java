@@ -1,4 +1,4 @@
-package com.example.assemble.activity;
+package com.example.assemble;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.assemble.R;
+import com.example.assemble.activity.UserProfileActivity;
+import com.example.assemble.activity.UserSettingsActivity;
+import com.example.assemble.activity.HomePageActivity;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.model.User;
 import com.example.assemble.service.UserManager;
@@ -27,6 +31,7 @@ import static org.mockito.Mockito.when;
 public class UserProfileTest {
 
     private UserProfileActivity userProfileActivity;
+    private UserSettingsActivity userSettingsActivity;
 
     @Mock
     private EditText mockNewUsernameEditText;
@@ -57,8 +62,9 @@ public class UserProfileTest {
         Mockito.doReturn(mockUpdateButton).when(userProfileActivity).findViewById(R.id.buttonUpdate);
         Mockito.doReturn(mockContext).when(userProfileActivity).getApplicationContext();
 
-        // Set up UserManager mock
-        userProfileActivity.userManager = mockUserManager;
+        // Initialize the activity and set the mock UserManager
+        userSettingsActivity = Mockito.spy(new UserSettingsActivity());
+        userSettingsActivity.setUserManager(mockUserManager);
 
         // Stub methods as needed
         when(mockNewUsernameEditText.getText()).thenReturn((Editable) Mockito.mock(CharSequence.class));

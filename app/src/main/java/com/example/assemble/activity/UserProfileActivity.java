@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assemble.R;
 import com.example.assemble.service.UserManager;
 import com.example.assemble.model.User;
+import com.example.assemble.service.SessionManager;
 
 import java.util.UUID;
 
@@ -40,12 +41,7 @@ public class UserProfileActivity extends AppCompatActivity {
         // Assume currentUserId is passed as an Intent extra
         currentUserId = getIntent().getStringExtra("CURRENT_USER_ID");
 
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserProfile();
-            }
-        });
+        updateButton.setOnClickListener(v -> updateUserProfile());
     }
 
     public String getToastMessage() {
@@ -69,17 +65,22 @@ public class UserProfileActivity extends AppCompatActivity {
             UUID userId = UUID.fromString(currentUserId);
             userManager.update(userId, new User(userId, newUsername, newPassword));
 
+            // Update the session with the new username
+            SessionManager.getInstance().setCurrentUsername(newUsername);
+
             // Show toast message for successful update
             toastMessage = "Profile updated successfully";
             Toast.makeText(UserProfileActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
 
             // Navigate back to home page
             Intent intent = new Intent(UserProfileActivity.this, HomePageActivity.class);
-            intent.putExtra("USER_NAME", newUsername); // Pass updated username to home page
             startActivity(intent);
             finish();
         } else {
             Log.e("UserProfileActivity", "Current user ID not found");
+            Toast.makeText(this, "User ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
     }
 }
