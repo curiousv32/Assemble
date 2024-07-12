@@ -16,4 +16,6 @@ public interface INoteManager extends IDatabaseManager<Note>{
 
     @Override
     void delete(UUID noteId);
+
+    void addDefaultItem();
 }
