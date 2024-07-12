@@ -30,8 +30,9 @@ public class NoteManager implements INoteManager {
     private Note openedNote;
     private boolean useSQLDatabase;
     private String ownerId;
+    private final UUID defaultNoteId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    public static final String STUB_NOTE_NAME = "stub";
+    public static final String DEFAULT_NOTE_NAME = "DEFAULT NOTE";
 
     private NoteManager(Context context) {
         this.notes = new HashMap<>();
@@ -46,19 +47,18 @@ public class NoteManager implements INoteManager {
         return REFERENCE;
     }
 
-    public HashMap<UUID, Note> init(String ownerUUID) {
+    public void init(String ownerUUID) {
         notes.clear();
         List<Note> notesList;
         this.ownerId = ownerUUID;
-        if (!useSQLDatabase) {
-            notesList = stubNote;
-        } else {
+        addDefaultItem();
+
+        if (useSQLDatabase) {
             notesList = this.getUserNotesFromDB(ownerUUID);
+            for (Note note : notesList) {
+                notes.put(note.getID(), note);
+            }
         }
-        for (Note note : notesList) {
-            notes.put(note.getID(), note);
-        }
-        return notes;
     }
 
     public Note createNote(String name) throws InvalidNoteException {
@@ -146,6 +146,16 @@ public class NoteManager implements INoteManager {
         notes.remove(noteId);
     }
 
+    @Override
+    public void addDefaultItem() {
+        try {
+            Note note = new Note(defaultNoteId, DEFAULT_NOTE_NAME);
+            add(note);
+        } catch (InvalidNoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Note getOpenNote() {
         return openedNote;
     }
@@ -188,8 +198,4 @@ public class NoteManager implements INoteManager {
         }
         return notes;
     }
-
-    private List<Note> stubNote = new ArrayList<Note>() {{
-        add(new Note(UUID.randomUUID(), STUB_NOTE_NAME));
-    }};
 }

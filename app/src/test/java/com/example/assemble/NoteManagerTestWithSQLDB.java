@@ -16,7 +16,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.UUID;
 public class NoteManagerTestWithSQLDB {
 
@@ -61,8 +60,10 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void init_returnsNonNull() {
-        HashMap<UUID, Note> notes = noteManager.init("");
-        assertNotNull(notes);
+        noteManager.init("");
+        if (noteManager.getNotes() == null) {
+            fail("Notes should not be null");
+        }
     }
 
     @Test

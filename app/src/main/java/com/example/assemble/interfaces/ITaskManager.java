@@ -16,4 +16,6 @@ public interface ITaskManager extends IDatabaseManager<Task> {
 
     @Override
     void delete(UUID taskId);
+
+    void addDefaultItem();
 }
