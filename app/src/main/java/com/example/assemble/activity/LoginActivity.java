@@ -60,11 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         initializeDb();
     }
 
-    public void onRegisterClick(View view) {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
-    }
-
     private void initializeDb() {
         DatabaseManager dbManager = DatabaseManager.getInstance(this);
         Statement statement = null;
@@ -99,5 +94,10 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void onRegisterClick(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 }

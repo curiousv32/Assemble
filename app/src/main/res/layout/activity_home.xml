@@ -13,12 +13,13 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.828"
+        app:layout_constraintHorizontal_bias="0.585"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.247" />
+        app:layout_constraintVertical_bias="0.251" />
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         android:layout_width="221dp"
         android:layout_height="844dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,6 +51,23 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:text="@string/flashcard_button" />
+
     </com.google.android.material.navigation.NavigationView>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="75dp"
+        android:layout_height="70dp"
+        android:contentDescription="@string/settings"
+        android:src="@drawable/ic_settings"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.001" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

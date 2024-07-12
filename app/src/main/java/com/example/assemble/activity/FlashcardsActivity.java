@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
-//import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.model.Flashcard;
 import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.util.FlashcardAdapter;

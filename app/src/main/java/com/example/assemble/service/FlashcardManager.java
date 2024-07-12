@@ -5,9 +5,7 @@ import static java.sql.DriverManager.getConnection;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.assemble.activity.FlashcardsActivity;
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.model.Flashcard;
 
@@ -20,11 +18,11 @@ import java.util.List;
 
 public class FlashcardManager {
     private static final String SHARED_PREF_NAME = "AssemblePrefs";
-    private SharedPreferences sharedPreferences;
+    //private SharedPreferences sharedPreferences;
     private DatabaseManager dbManager;
     private boolean useSQLDatabase;
     public FlashcardManager(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        //this.sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         this.dbManager = DatabaseManager.getInstance(context);
         this.useSQLDatabase = usingSQLDatabase();
     }

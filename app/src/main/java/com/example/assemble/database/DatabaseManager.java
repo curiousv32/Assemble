@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.assemble.model.Note;
+import com.example.assemble.model.UserProfile;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -50,31 +52,6 @@ public class DatabaseManager {
         return REFERENCE;
     }
 
-    public void initDB(){
-        try (Connection connection = DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
-             Statement statement = connection.createStatement()) {
-            // Create Users table
-            String createUsersTableSQL = "CREATE TABLE IF NOT EXISTS users ("
-                    + "id INTEGER IDENTITY PRIMARY KEY,"
-                    + "username VARCHAR(255) NOT NULL UNIQUE,"
-                    + "password VARCHAR(255) NOT NULL"
-                    + ")";
-            statement.executeUpdate(createUsersTableSQL);
-            // Create flashcards table
-            String createFlashcardsTableSQL = "CREATE TABLE IF NOT EXISTS flashcards ("
-                    + "id INTEGER IDENTITY PRIMARY KEY,"
-                    + "username VARCHAR(255) NOT NULL,"
-                    + "question VARCHAR(255) NOT NULL,"
-                    + "answer VARCHAR(255) NOT NULL,"
-                    + "FOREIGN KEY (username) REFERENCES users(username)"
-                    + ")";
-            statement.executeUpdate(createFlashcardsTableSQL);
-            System.out.println("Database setup completed successfully!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
     }
@@ -111,6 +88,77 @@ public class DatabaseManager {
         } catch (SQLException exception) {
             Log.e("DBError", "Something went wrong on runQuery: " + query);
             exception.printStackTrace();
+        }
+    }
+
+    // UserProfile methods
+    public void createUserProfileTable() {
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS userprofile " +
+                "(id IDENTITY PRIMARY KEY, " +
+                "username VARCHAR(50), " +
+                "password VARCHAR(50))";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(createTableSQL)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            Log.e("database error", "Error creating user profile table", e);
+        }
+    }
+
+    public void addUserProfile(String username, String password) {
+        String insertSQL = "INSERT INTO userprofile (username, password) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            Log.e("database error", "Error inserting user profile", e);
+        }
+    }
+
+    public UserProfile getUserProfile(String username) {
+        String querySQL = "SELECT id, username, password FROM userprofile WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(querySQL)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                UserProfile userProfile = new UserProfile();
+                userProfile.setId(rs.getLong("id"));
+                userProfile.setUsername(rs.getString("username"));
+                userProfile.setPassword(rs.getString("password"));
+                return userProfile;
+            }
+        } catch (SQLException e) {
+            Log.e("database error", "Error fetching user profile", e);
+        }
+        return null;
+    }
+
+    // Update user profile password by username
+    public void updateUserProfile(String currentUsername, String newUsername, String newPassword) {
+        String updateSQL = "UPDATE userprofile SET username = ?, password = ? WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(updateSQL)) {
+            stmt.setString(1, newUsername);
+            stmt.setString(2, newPassword);
+            stmt.setString(3, currentUsername);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            Log.e("database error", "Error updating user profile", e);
+        }
+    }
+
+    // Delete user profile by username
+    public void deleteUserProfile(String username) {
+        String deleteSQL = "DELETE FROM userprofile WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(deleteSQL)) {
+            stmt.setString(1, username);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            Log.e("database error", "Error deleting user profile", e);
         }
     }
 }
