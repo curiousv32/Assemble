@@ -34,5 +34,6 @@ public class SessionManager {
 
     public void clearSession() {
         currentUserID = null;
+        currentUsername = null; // Clear the username as well
     }
 }

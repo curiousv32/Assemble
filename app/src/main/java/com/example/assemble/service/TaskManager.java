@@ -20,12 +20,16 @@ import java.util.UUID;
 public class TaskManager implements ITaskManager {
 
     private static TaskManager REFERENCE;
-    private DatabaseManager dbManager;
-    private HashMap<UUID, Task> tasks;
-    private boolean useSQLDatabase;
+    private final DatabaseManager dbManager;
+    private final HashMap<UUID, Task> tasks;
+    private final boolean useSQLDatabase;
     private String ownerId;
+    private final UUID defaultTaskId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    public static final String STUB_TASK_NAME = "stub";
+    public static final String DEFAULT_TASK_NAME = "DEFAULT TASK";
+    public static final String DEFAULT_TASK_DESCRIPTION = "DEFAULT TASK DESCRIPTION";
+    public static final String DEFAULT_TASK_PRIORITY = "High";
+    public static final String DEFAULT_TASK_STATUS = "Pending";
 
     private TaskManager(Context context) {
         this.tasks = new HashMap<>();
@@ -40,19 +44,18 @@ public class TaskManager implements ITaskManager {
         return REFERENCE;
     }
 
-    public HashMap<UUID, Task> init(String ownerUUID) {
+    public void init(String ownerUUID) {
         tasks.clear();
         List<Task> taskList;
         this.ownerId = ownerUUID;
-        if (!useSQLDatabase) {
-            taskList = stubTask;
-        } else {
+        addDefaultItem();
+
+        if (useSQLDatabase) {
             taskList = this.getUserTasksFromDB(ownerUUID);
+            for (Task task : taskList) {
+                tasks.put(task.getId(), task);
+            }
         }
-        for (Task task : taskList) {
-            tasks.put(task.getId(), task);
-        }
-        return tasks;
     }
 
     public Task createTask(String title, String description, String deadline, String priority, String status) throws InvalidTaskException {
@@ -142,6 +145,16 @@ public class TaskManager implements ITaskManager {
         tasks.remove(taskId);
     }
 
+    @Override
+    public void addDefaultItem() {
+        try {
+            Task defaultTask = new Task(defaultTaskId, DEFAULT_TASK_NAME, DEFAULT_TASK_DESCRIPTION, new java.util.Date(), DEFAULT_TASK_PRIORITY, DEFAULT_TASK_STATUS);
+            add(defaultTask);
+        } catch (InvalidTaskException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean contains(String taskTitle) {
         return tasks.values().stream().anyMatch(task -> task.getTitle().equals(taskTitle));
     }
@@ -173,13 +186,8 @@ public class TaskManager implements ITaskManager {
         return tasks;
     }
 
-    private List<Task> stubTask = new ArrayList<Task>() {{
-        add(new Task(UUID.randomUUID(), "Stub Task", "Stub task description", new java.util.Date(), "High", "Pending"));
-    }};
-
     public List<Task> getAllTasks(String ownerUUID) {
         if(useSQLDatabase){
-            tasks.clear();
             List<Task> taskList = getUserTasksFromDB(ownerUUID);
             for (Task task : taskList) {
                 tasks.put(task.getId(), task);
@@ -189,7 +197,6 @@ public class TaskManager implements ITaskManager {
     }
 
     private List<Task> getUserTasksFromDB(String ownerUUID) {
-        tasks.clear();
         List<Task> taskList = getUserTasks(ownerUUID);
         for (Task task : taskList) {
             tasks.put(task.getId(), task);

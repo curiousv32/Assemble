@@ -61,6 +61,10 @@ The Assemble application follows a layered architecture with the following compo
 
 - Improved separation of concerns: This architecture separates the user interface, data, and business logic, leading to a more maintainable and testable codebase.
 - Reusability
+- Data flow: Illustrates how data moves through the system includes key data sources and processed steps.
+- Design decision: Records important design decisions moves during the development process.
+- Future enhancment: Notes potential areas for future improvement.
+- Team collaboration: Serves as a reference document for team memebers, aiding in knowledge sharing and ensuring clear understanding of the system's architecture.
 
 **Here's a sketch of the overall architecture of the Assemble application using Mermaid syntax:**
 

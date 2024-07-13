@@ -174,6 +174,9 @@ public class UserSettingsActivity extends AppCompatActivity {
         startActivity(new Intent(UserSettingsActivity.this, LoginActivity.class));
         finish();
     }
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
 
     private void navigateToLogin() {
         Intent intent = new Intent(UserSettingsActivity.this, LoginActivity.class);
