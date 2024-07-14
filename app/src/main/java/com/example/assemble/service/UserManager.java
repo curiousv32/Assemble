@@ -1,9 +1,11 @@
 package com.example.assemble.service;
 
+import static android.content.ContentValues.TAG;
 import static com.example.assemble.database.DatabaseManager.usingSQLDatabase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidUserException;
@@ -29,11 +31,11 @@ public class UserManager implements IUserManager {
     }
 
     // Add this method to get the current user ID
-    public String getCurrentUserId() {
+    public UUID getCurrentUserId() {
         // Retrieve the current username from the session
         String currentUsername = SessionManager.getInstance().getCurrentUsername();
         if (currentUsername != null && !currentUsername.isEmpty()) {
-            return getID(currentUsername);
+            return getUUID(currentUsername);
         }
         return null;
     }
@@ -185,7 +187,13 @@ public class UserManager implements IUserManager {
             return sharedPreferences.getString(username + "_id", "");
         }
     }
-
+    public void logout() {
+        UUID userId = getCurrentUserId();
+        if (userId != null) {
+            Log.d(TAG, "User with ID " + userId + " has logged out.");
+        }
+        SessionManager.getInstance().clearSession();
+    }
     public String getUsername(String userName) {
         if (useSQLDatabase) {
             return userName;
@@ -241,6 +249,9 @@ public class UserManager implements IUserManager {
             editor.clear();
             editor.apply();
         }
+    }
+    public boolean isUsernameUnique(String username) {
+        return !doesUsernameExist(username);
     }
 
     public UUID getUUID(String username) {

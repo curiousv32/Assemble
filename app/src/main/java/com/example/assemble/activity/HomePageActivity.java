@@ -12,10 +12,12 @@ import com.example.assemble.R;
 import com.example.assemble.service.UserManager;
 import com.example.assemble.service.SessionManager;
 
+import java.util.UUID;
+
 public class HomePageActivity extends AppCompatActivity {
     private String username;
     private UserManager userManager;
-    private String currentUserId;
+    private UUID currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class HomePageActivity extends AppCompatActivity {
         // Set click listener for settings icon
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, UserSettingsActivity.class);
-            if (currentUserId != null && !currentUserId.isEmpty()) {
+            if (currentUserId != null) {
                 intent.putExtra("CURRENT_USER_ID", currentUserId);
                 startActivity(intent);
             } else {
