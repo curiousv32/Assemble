@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assemble.R;
+import com.example.assemble.service.SessionManager;
 import com.example.assemble.service.UserManager;
 import com.example.assemble.model.User;
 import com.example.assemble.service.SessionManager;
@@ -26,7 +27,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private UserManager userManager;
     private String currentUserId; // Store the current user ID
     private String toastMessage; // Field to store the last shown toast message
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (currentUserId != null) {
             // Create a new User object with updated details
             UUID userId = UUID.fromString(currentUserId);
+
             userManager.update(userId, new User(userId, newUsername, newPassword));
 
             // Update the session with the new username
