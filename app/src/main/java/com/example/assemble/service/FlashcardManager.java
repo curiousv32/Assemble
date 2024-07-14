@@ -20,9 +20,14 @@ public class FlashcardManager {
     private static final String SHARED_PREF_NAME = "AssemblePrefs";
     private DatabaseManager dbManager;
     private boolean useSQLDatabase;
+    private List<Flashcard> flashcards; // for stub database
     public FlashcardManager(Context context) {
         this.dbManager = DatabaseManager.getInstance(context);
         this.useSQLDatabase = usingSQLDatabase();
+    }
+
+    public FlashcardManager(){  // For unit tests without mockito
+        flashcards = new ArrayList<>();
     }
 
     public void addFlashcard(String username, String question, String answer) {
@@ -39,7 +44,7 @@ public class FlashcardManager {
                 Log.e("database error", "Error adding flashcard: " + e.getMessage());
             }
         } else {
-            // stub implementation
+            flashcards.add(new Flashcard(username, question, answer));
         }
     }
 
@@ -55,7 +60,13 @@ public class FlashcardManager {
                 Log.e("database error", "Error deleting flashcard: " + e.getMessage());
             }
         } else {
-            // stub implementation
+            for (int i = 0; i < flashcards.size(); i++) {
+                Flashcard flashcard = flashcards.get(i);
+                if (flashcard.getUsername().equals(username) && flashcard.getQuestion().equals(question)) {
+                    flashcards.remove(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -79,9 +90,13 @@ public class FlashcardManager {
             }
             return flashcards;
         } else {
-            // stub implementation
-            List<Flashcard> flashcards = new ArrayList<>();
-            return flashcards;
+            List<Flashcard> userFlashcards = new ArrayList<>();
+            for (Flashcard flashcard : flashcards) {
+                if (flashcard.getUsername().equals(username)) {
+                    userFlashcards.add(flashcard);
+                }
+            }
+            return userFlashcards;
         }
     }
 }

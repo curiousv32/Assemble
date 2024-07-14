@@ -13,7 +13,6 @@ import com.example.assemble.R;
 import com.example.assemble.model.Flashcard;
 import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.util.FlashcardAdapter;
-import com.example.assemble.database.FlashcardsStub;
 
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class FlashcardsActivity extends AppCompatActivity {
     private Button addFlashcardButton;
     private Button deleteFlashcardButton;
     private ListView flashcardsListView;
-    private FlashcardsStub flashcardStub;
     private FlashcardManager flashcardManager;
     private String username;
 
@@ -37,9 +35,9 @@ public class FlashcardsActivity extends AppCompatActivity {
         answerEditText = findViewById(R.id.answerEditText);
         addFlashcardButton = findViewById(R.id.addFlashcardButton);
         flashcardsListView = findViewById(R.id.flashcardsListView);
-        flashcardStub = new FlashcardsStub();
         flashcardManager = new FlashcardManager(this);
         username = getIntent().getStringExtra("USER_NAME");
+        flashcardManager.addFlashcard(username, "DEFAULT_QUESTION", "DEFAULT_ANSWER");
 
         addFlashcardButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -23,7 +23,7 @@ public class UserSettingsActivity extends AppCompatActivity {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private Button saveButton;
+    // private Button saveButton;
     private Button updateButton;
     private Button logoutButton;
     private UserManager userManager;
@@ -40,7 +40,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Initializing UI components");
         usernameEditText = findViewById(R.id.editTextUsername);
         passwordEditText = findViewById(R.id.editTextPassword);
-        saveButton = findViewById(R.id.buttonSave);
+        //saveButton = findViewById(R.id.buttonSave);
         updateButton = findViewById(R.id.buttonUpdate);
         logoutButton = findViewById(R.id.buttonLogout);
         userManager = new UserManager(this);
@@ -69,13 +69,13 @@ public class UserSettingsActivity extends AppCompatActivity {
 
         loadUserProfile();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "saveButton clicked");
-                saveUserProfile();
-            }
-        });
+//        saveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "saveButton clicked");
+//                saveUserProfile();
+//            }
+//        });
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
