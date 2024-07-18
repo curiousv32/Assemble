@@ -18,13 +18,14 @@ import com.example.assemble.model.Note;
 import com.example.assemble.service.NoteManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Context context;
-    private ArrayList<Note> notes;
+    private List<Note> notes;
 
-    public NoteAdapter(Context context, ArrayList<Note> notes) {
+    public NoteAdapter(Context context, List<Note> notes) {
         this.context = context;
         this.notes = notes;
     }

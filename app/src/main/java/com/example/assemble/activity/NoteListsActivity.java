@@ -1,5 +1,6 @@
 package com.example.assemble.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -29,18 +30,19 @@ public class NoteListsActivity extends AppCompatActivity {
 
         Button createNote = findViewById(R.id.note_create);
         Button searchNote = findViewById(R.id.search_note_button);
+        Button resetSearch = findViewById(R.id.reset_search);
+
         TextView name = findViewById(R.id.new_note_name);
         TextView searchText = findViewById(R.id.search_note_text);
 
         NoteManager noteManager = NoteManager.getInstance(this);
 
-        ArrayList<Note> notes = new ArrayList<>(noteManager.getNotes());
+        List<Note> notes = new ArrayList<>(noteManager.getNotes());
 
         RecyclerView noteLists = findViewById(R.id.notes);
         noteLists.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> adapter = new NoteAdapter(this, notes);
 
-        noteLists.setAdapter(adapter);
+        initializeAdapter(this, notes, noteLists);
 
         createNote.setOnClickListener(v -> {
             if (name.getText().length() > 0 && name.getText().length() <= NoteManager.MAX_NOTE_NAME_SIZE) {
@@ -72,12 +74,22 @@ public class NoteListsActivity extends AppCompatActivity {
         searchNote.setOnClickListener(v -> {
             String text = searchText.getText().toString();
 
-            if (text.length() > 3) {
+            if (text.length() >= NoteManager.MIN_NOTE_SEARCH_SIZE) {
                 List<Note> results = noteManager.searchNotes(text);
-
+                initializeAdapter(this, results, noteLists);
             } else {
                 Toast.makeText(this, "Must be at least 3 characters", Toast.LENGTH_LONG).show();
             }
         });
+
+        resetSearch.setOnClickListener(v -> {
+            initializeAdapter(this, notes, noteLists);
+            searchText.setText("");
+        });
+    }
+
+    private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view) {
+        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> newAdapter = new NoteAdapter(context, notesToShow);
+        view.setAdapter(newAdapter);
     }
 }

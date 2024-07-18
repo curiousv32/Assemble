@@ -13,6 +13,7 @@ import com.example.assemble.model.Note;
 import com.example.assemble.service.NoteManager;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 public class NoteManagerTestWithStubDB {
@@ -89,6 +90,52 @@ public class NoteManagerTestWithStubDB {
             noteManager.add(createdNote);
             Note foundNote = noteManager.get(id, Note.class);
             assertTrue("Retrieved note should match created", createdNote.equals(foundNote));
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchNotes_filter_withStubDB() {
+        noteManager.init("");
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            List<Note> searchResults = noteManager.searchNotes("this is correct");
+
+            assertEquals(searchResults.size(), 1);
+            assertEquals(searchResults.get(0).getName(), "test1");
+            assertEquals(searchResults.get(0).getText(), "this is correct");
+
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchNotes_no_results_withStubDB() {
+        noteManager.init("");
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            List<Note> searchResults = noteManager.searchNotes("this is correct not");
+
+            assertEquals(searchResults.size(), 0);
+
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());
         }

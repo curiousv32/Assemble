@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class NoteManager implements INoteManager {
 
     public static final int MAX_NOTE_NAME_SIZE = 10;
+    public static final int MIN_NOTE_SEARCH_SIZE = 3;
 
     private static NoteManager REFERENCE;
     private DatabaseManager dbManager;
