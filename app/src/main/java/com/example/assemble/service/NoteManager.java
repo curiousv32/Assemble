@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class NoteManager implements INoteManager {
 
@@ -197,5 +198,11 @@ public class NoteManager implements INoteManager {
             e.printStackTrace();
         }
         return notes;
+    }
+
+    public List<Note> searchNotes(String searchText) {
+        return notes.values().stream()
+                .filter(note -> note.getText().contains(searchText))
+                .collect(Collectors.toList());
     }
 }

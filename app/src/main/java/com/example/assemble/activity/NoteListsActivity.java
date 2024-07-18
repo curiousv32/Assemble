@@ -18,6 +18,7 @@ import com.example.assemble.service.NoteManager;
 import com.example.assemble.util.NoteAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoteListsActivity extends AppCompatActivity {
 
@@ -27,7 +28,10 @@ public class NoteListsActivity extends AppCompatActivity {
         setContentView(R.layout.note_lists_page);
 
         Button createNote = findViewById(R.id.note_create);
+        Button searchNote = findViewById(R.id.search_note_button);
         TextView name = findViewById(R.id.new_note_name);
+        TextView searchText = findViewById(R.id.search_note_text);
+
         NoteManager noteManager = NoteManager.getInstance(this);
 
         ArrayList<Note> notes = new ArrayList<>(noteManager.getNotes());
@@ -62,6 +66,17 @@ public class NoteListsActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Invalid note name", Toast.LENGTH_LONG).show();
                 name.setText("");
+            }
+        });
+
+        searchNote.setOnClickListener(v -> {
+            String text = searchText.getText().toString();
+
+            if (text.length() > 3) {
+                List<Note> results = noteManager.searchNotes(text);
+
+            } else {
+                Toast.makeText(this, "Must be at least 3 characters", Toast.LENGTH_LONG).show();
             }
         });
     }
