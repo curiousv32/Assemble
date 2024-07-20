@@ -35,6 +35,7 @@ public class HomePageActivity extends AppCompatActivity {
         Button todolistButton = findViewById(R.id.button2);
         Button flashcardButton = findViewById(R.id.button3);
         AppCompatImageButton settingsButton = findViewById(R.id.settingsButton);
+        Button pomodoroTimerButton = findViewById(R.id.openPomodoroButton);
 
         // Set click listeners for buttons
         noteButton.setOnClickListener(v -> {
@@ -52,6 +53,12 @@ public class HomePageActivity extends AppCompatActivity {
             intent.putExtra("USER_NAME", username);
             startActivity(intent);
         });
+
+        pomodoroTimerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PomodoroActivity.class);
+            startActivity(intent);
+        });
+
 
         // Set click listener for settings icon
         settingsButton.setOnClickListener(v -> {
