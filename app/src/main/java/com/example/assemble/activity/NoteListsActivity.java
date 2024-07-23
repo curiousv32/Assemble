@@ -1,6 +1,8 @@
 package com.example.assemble.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -31,6 +33,7 @@ public class NoteListsActivity extends AppCompatActivity {
         Button createNote = findViewById(R.id.note_create);
         Button searchNote = findViewById(R.id.search_note_button);
         Button resetSearch = findViewById(R.id.reset_search);
+        Button delete = findViewById(R.id.delete_button);
 
         TextView name = findViewById(R.id.new_note_name);
         TextView searchText = findViewById(R.id.search_note_text);
@@ -86,6 +89,10 @@ public class NoteListsActivity extends AppCompatActivity {
             initializeAdapter(this, notes, noteLists);
             searchText.setText("");
         });
+
+        delete.setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("Confirm delete").setMessage("Are you sure you want to delete this note?")
+                .setPositiveButton(R.id., (dialogInterface, i) -> Toast.makeText(this, "test", Toast.LENGTH_LONG).show())
+                .setNegativeButton(4, null).show());
     }
 
     private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view) {
