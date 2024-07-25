@@ -90,9 +90,9 @@ public class NoteListsActivity extends AppCompatActivity {
             searchText.setText("");
         });
 
-        delete.setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("Confirm delete").setMessage("Are you sure you want to delete this note?")
-                .setPositiveButton(R.id., (dialogInterface, i) -> Toast.makeText(this, "test", Toast.LENGTH_LONG).show())
-                .setNegativeButton(4, null).show());
+        /*delete.setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("Confirm delete").setMessage("Are you sure you want to delete this note?")
+                .setPositiveButton(R.i., (dialogInterface, i) -> Toast.makeText(this, "test", Toast.LENGTH_LONG).show())
+                .setNegativeButton(4, null).show());*/
     }
 
     private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view) {
