@@ -41,17 +41,17 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
-    implementation (libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
 
     testImplementation(libs.junit)
-    testImplementation(libs.mockito.core) // Add Mockito core from version catalog
-    testImplementation(libs.mockito.inline) // Add Mockito inline from version catalog
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
+    testImplementation (libs.robolectric)
     testImplementation(libs.androidx.core.v120)
 }
