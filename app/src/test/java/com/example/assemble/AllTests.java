@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
         NoteTest.class,
         FlashCardManagerTest.class,
         UserManagerTestWithSQLDB.class,
-        UserManagerTestWithStubDB.class
+        UserManagerTestWithStubDB.class,
+        UserSettingsTest.class
 })
 public class AllTests {
 }

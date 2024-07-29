@@ -40,7 +40,4 @@ public class UserSettingsManager {
         userManager.logout(); // Clear the current user ID
     }
 
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
 }

@@ -40,7 +40,6 @@ public class UserManager implements IUserManager {
         return null;
     }
 
-    // Other methods...
 
     public boolean addUser(User user) {
         try {
@@ -249,9 +248,6 @@ public class UserManager implements IUserManager {
             editor.clear();
             editor.apply();
         }
-    }
-    public boolean isUsernameUnique(String username) {
-        return !doesUsernameExist(username);
     }
 
     public UUID getUUID(String username) {

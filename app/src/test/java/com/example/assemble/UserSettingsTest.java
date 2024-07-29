@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UserSettingsTest {
 
     private UserSettingsManager userSettingsManager;
-    private UserManager userManager;
+
     private User testUser;
 
     @Before
@@ -36,11 +36,9 @@ public class UserSettingsTest {
     }
     @Test
     public void testUpdateUserProfile() {
-        // Given
-        UUID userId = UUID.randomUUID(); // Unique ID for testing
+
         String newUsername = "newTestUser";
         String newPassword = "newPassword123";
-        User updatedUser = new User(userId, newUsername, newPassword);
 
         // Mock the update behavior
         Mockito.when(userSettingsManager.updateUserProfile(newUsername, newPassword)).thenReturn(true);
