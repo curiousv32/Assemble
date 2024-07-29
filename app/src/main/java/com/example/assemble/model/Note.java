@@ -18,6 +18,10 @@ public class Note {
         this.lastUpdatedDate = new Date();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setCreationDate() {
         this.creationDate = new Date();
     }

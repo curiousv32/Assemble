@@ -42,7 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="950dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="7dp"
         android:text="Delete" />
 
     <Button
@@ -50,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="1100dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="7dp"
         android:text="Rename" />
 
 </androidx.cardview.widget.CardView>

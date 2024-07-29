@@ -148,6 +148,13 @@ public class NoteManager implements INoteManager {
         notes.remove(noteId);
     }
 
+    public void rename(Note note, String newName) {
+        note.setName(newName);
+
+        if (useSQLDatabase) {
+            dbManager.runUpdateQuery("UPDATE notes SET name=? WHERE id=?", newName, note.getID());
+        }
+    }
     @Override
     public void addDefaultItem() {
         try {

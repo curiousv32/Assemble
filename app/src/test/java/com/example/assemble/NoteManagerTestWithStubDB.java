@@ -14,6 +14,7 @@ import com.example.assemble.service.NoteManager;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NoteManagerTestWithStubDB {
@@ -135,6 +136,53 @@ public class NoteManagerTestWithStubDB {
             List<Note> searchResults = noteManager.searchNotes("this is correct not");
 
             assertEquals(searchResults.size(), 0);
+
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void delete_withStubDB() {
+        noteManager.init("");
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            noteManager.delete(createdNote1.getID());
+
+            assertEquals(noteManager.getNotes().size(), 1);
+            Optional<Note> optionalNote = noteManager.getNotes().stream().findFirst();
+            assertTrue(optionalNote.isPresent());
+            assertEquals("test2", optionalNote.get().getName());
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void rename_withStubDB() {
+        noteManager.init("");
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            noteManager.rename(createdNote1, "test3");
+
+            assertEquals(createdNote1.getName(), "test3");
+            assertEquals(createdNote2.getName(), "test2");
 
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());

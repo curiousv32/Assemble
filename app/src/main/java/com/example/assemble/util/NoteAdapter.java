@@ -1,5 +1,6 @@
 package com.example.assemble.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -7,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +53,39 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             NoteManager.getInstance(context).setOpenedNote(note);
             context.startActivity(new Intent(context, NoteActivity.class));
         });
+
+        holder.deleteButton.setOnClickListener(v ->
+            new AlertDialog.Builder(context)
+            .setTitle("Confirm delete")
+            .setMessage("Are you sure you want to delete this note?")
+            .setPositiveButton("Yes", (dialogInterface, i) -> {
+                NoteManager.getInstance(context).delete(note.getID());
+                notes.remove(position);
+                Toast.makeText(context, "Note deleted", Toast.LENGTH_LONG).show();
+                notifyItemRemoved(position);
+            })
+            .setNegativeButton("No", null).create().show());
+
+        holder.renameButton.setOnClickListener(v ->
+        {
+            EditText editText = new EditText(context);
+            editText.setHint("New note name");
+
+            new AlertDialog.Builder(context)
+            .setTitle("Confirm rename")
+            .setView(editText)
+            .setMessage("Are you sure you want to rename this note?")
+            .setPositiveButton("Yes", (dialogInterface, i) -> {
+                if (editText.getText().length() <= NoteManager.MAX_NOTE_NAME_SIZE) {
+                    NoteManager.getInstance(context).rename(note, editText.getText().toString());
+                    Toast.makeText(context, "Note renamed", Toast.LENGTH_LONG).show();
+                    notifyItemChanged(position);
+                } else {
+                    Toast.makeText(context, "Name too long", Toast.LENGTH_LONG).show();
+                }
+            })
+            .setNegativeButton("No", null).create().show();
+        });
     }
 
     @Override
@@ -59,12 +96,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public static class NoteViewHolder extends RecyclerView.ViewHolder {
         TextView noteName;
         TextView lastUpdatedDate;
+        Button deleteButton;
+        Button renameButton;
 
         public NoteViewHolder(@NonNull View noteView) {
             super(noteView);
 
             noteName = noteView.findViewById(R.id.note_name);
             lastUpdatedDate = noteView.findViewById(R.id.note_last_updated);
+            deleteButton = noteView.findViewById(R.id.delete_button);
+            renameButton = noteView.findViewById(R.id.rename_button);
         }
     }
 }

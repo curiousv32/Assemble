@@ -141,4 +141,38 @@ public class NoteManagerTestWithSQLDB {
         }
     }
 
+    @Test
+    public void delete_succeed_withSQLDB() {
+        noteManager.init("");
+
+        try {
+            UUID id = UUID.randomUUID();
+            Note createdNote = new Note(id, "test");
+            noteManager.add(createdNote);
+
+            noteManager.delete(id);
+
+            Note foundNote = noteManager.get(id, Note.class);
+            assertNull("Note should be null", foundNote);
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void rename_succeed_withSQLDB() {
+        noteManager.init("");
+
+        try {
+            UUID id = UUID.randomUUID();
+            Note createdNote = new Note(id, "test");
+            noteManager.add(createdNote);
+
+            noteManager.rename(createdNote, "test2");
+
+            assertEquals("Note name should be changed", "test2", createdNote.getName());
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
 }
