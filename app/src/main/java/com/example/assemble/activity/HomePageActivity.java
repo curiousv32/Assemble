@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public class HomePageActivity extends AppCompatActivity {
     private String username;
-    private UserManager userManager;
     private UUID currentUserId;
 
     @Override
@@ -24,9 +23,9 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // Link to home.xml
 
-        userManager = new UserManager(this);
+        // Retrieve the current user information from SessionManager
         username = SessionManager.getInstance().getCurrentUsername();
-        currentUserId = userManager.getCurrentUserId(); // Assuming UserManager has this method
+        currentUserId = SessionManager.getInstance().getCurrentUserID();
 
         // Find the welcome TextView and update it with the user's name
         TextView welcomeTextView = findViewById(R.id.textView3);
@@ -59,7 +58,7 @@ public class HomePageActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, UserSettingsActivity.class);
             if (currentUserId != null) {
-                intent.putExtra("CURRENT_USER_ID", currentUserId);
+                intent.putExtra("CURRENT_USER_ID", currentUserId.toString());
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "User ID not found. Please log in again.", Toast.LENGTH_SHORT).show();

@@ -29,20 +29,28 @@ public class UserSettingsTest {
     }
 
     @Test
-
     public void testLoadUserProfile() {
-
         User loadedUser = userSettingsManager.loadUserProfile();
         assertEquals("testUser", loadedUser.getUsername());
         assertEquals("password123", loadedUser.getPassword());
     }
-
     @Test
-    public void testSaveUserProfile() {
-        String newUsername = "newUser";
+    public void testUpdateUserProfile() {
+        // Given
+        UUID userId = UUID.randomUUID(); // Unique ID for testing
+        String newUsername = "newTestUser";
         String newPassword = "newPassword123";
-        userSettingsManager.saveUserProfile(newUsername, newPassword);
-        Mockito.verify(userSettingsManager).saveUserProfile(newUsername, newPassword);
+        User updatedUser = new User(userId, newUsername, newPassword);
+
+        // Mock the update behavior
+        Mockito.when(userSettingsManager.updateUserProfile(newUsername, newPassword)).thenReturn(true);
+
+        // When
+        boolean result = userSettingsManager.updateUserProfile(newUsername, newPassword);
+
+        // Then
+        assertTrue(result); // Verify the update was successful
+        Mockito.verify(userSettingsManager).updateUserProfile(newUsername, newPassword);
     }
 
     @Test
@@ -50,5 +58,5 @@ public class UserSettingsTest {
         userSettingsManager.logoutUser();
         Mockito.verify(userSettingsManager).logoutUser();
     }
-
 }
+

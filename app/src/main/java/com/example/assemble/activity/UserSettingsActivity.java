@@ -23,7 +23,6 @@ public class UserSettingsActivity extends AppCompatActivity {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private Button saveButton;
     private Button updateButton;
     private Button logoutButton;
     private UserSettingsManager userSettingsManager;
@@ -40,7 +39,6 @@ public class UserSettingsActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Initializing UI components");
         usernameEditText = findViewById(R.id.editTextUsername);
         passwordEditText = findViewById(R.id.editTextPassword);
-        saveButton = findViewById(R.id.buttonSave);
         updateButton = findViewById(R.id.buttonUpdate);
         logoutButton = findViewById(R.id.buttonLogout);
 
@@ -63,11 +61,6 @@ public class UserSettingsActivity extends AppCompatActivity {
 
         userSettingsManager = new UserSettingsManager(this, currentUserId);
         loadUserProfile();
-
-        saveButton.setOnClickListener(v -> {
-            Log.d(TAG, "saveButton clicked");
-            saveUserProfile();
-        });
 
         updateButton.setOnClickListener(v -> {
             Log.d(TAG, "updateButton clicked");
@@ -109,19 +102,6 @@ public class UserSettingsActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "User profile not found. Please log in again.", Toast.LENGTH_SHORT).show();
             navigateToLogin();
-        }
-    }
-
-    private void saveUserProfile() {
-        Log.d(TAG, "saveUserProfile: Saving user profile");
-        String username = usernameEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
-        if (userSettingsManager.saveUserProfile(username, password)) {
-            Toast.makeText(UserSettingsActivity.this, "Profile saved successfully", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(UserSettingsActivity.this, HomePageActivity.class);
-            intent.putExtra("USER_NAME", username);
-            startActivity(intent);
-            finish();
         }
     }
 

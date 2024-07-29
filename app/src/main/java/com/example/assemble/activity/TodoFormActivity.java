@@ -1,5 +1,6 @@
 package com.example.assemble.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -24,7 +25,7 @@ import java.util.UUID;
 public class TodoFormActivity extends AppCompatActivity {
     private EditText taskTitle, taskDescription, taskDeadline;
     private Spinner taskPriority;
-    private Button submitButton;
+    private UUID taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,18 @@ public class TodoFormActivity extends AppCompatActivity {
         taskDescription = findViewById(R.id.taskDescription);
         taskDeadline = findViewById(R.id.taskDeadline);
         taskPriority = findViewById(R.id.taskPriority);
-        submitButton = findViewById(R.id.submitButton);
+        Button submitButton = findViewById(R.id.submitButton);
+
+        // Set up the priority dropdown
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.priorities, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        taskPriority.setAdapter(adapter);
+
+        taskId = getIntent().hasExtra("TASK_ID") ? UUID.fromString(getIntent().getStringExtra("TASK_ID")) : null;
+        if (taskId != null) {
+            loadTaskDetails(taskId);
+        }
 
         // deadline picker
         taskDeadline.setOnClickListener(v -> {
@@ -44,16 +56,10 @@ public class TodoFormActivity extends AppCompatActivity {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(TodoFormActivity.this,
+            @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(TodoFormActivity.this,
                     (view, year1, monthOfYear, dayOfMonth) -> taskDeadline.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
             datePickerDialog.show();
         });
-
-        // Set up the priority dropdown
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.priorities, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        taskPriority.setAdapter(adapter);
 
         // submit button
         submitButton.setOnClickListener(v -> {
@@ -76,15 +82,20 @@ public class TodoFormActivity extends AppCompatActivity {
         String description = taskDescription.getText().toString();
         String deadline = taskDeadline.getText().toString();
         String priority = taskPriority.getSelectedItem().toString();
-
-
-        Task newTask = new Task(UUID.randomUUID(), title, description, parseDate(deadline), priority, "Pending");
-
+        Date parsedDate = parseDate(deadline);
 
         TaskManager taskManager = TaskManager.getInstance(this);
+
         try {
-            taskManager.add(newTask);
-            Toast.makeText(this, "Task saved successfully!", Toast.LENGTH_SHORT).show();
+            if (taskId == null) {
+                Task newTask = new Task(UUID.randomUUID(), title, description, parsedDate, priority, "Pending");
+                taskManager.add(newTask);
+                Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Task existingTask = new Task(taskId, title, description, parsedDate, priority, "Pending");
+                taskManager.update(taskId, existingTask);
+                Toast.makeText(this, "Task updated successfully!", Toast.LENGTH_SHORT).show();
+            }
             finish();
         } catch (Exception e) {
             Toast.makeText(this, "Failed to save task: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -99,5 +110,16 @@ public class TodoFormActivity extends AppCompatActivity {
             return new Date();
         }
     }
+
+    private void loadTaskDetails(UUID taskId) {
+        Task task = TaskManager.getInstance(this).get(taskId, Task.class);
+        if (task != null) {
+            taskTitle.setText(task.getTitle());
+            taskDescription.setText(task.getDescription());
+            taskDeadline.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(task.getDeadline()));
+            taskPriority.setSelection(((ArrayAdapter<String>) taskPriority.getAdapter()).getPosition(task.getPriority()));
+        }
+    }
+
 
 }

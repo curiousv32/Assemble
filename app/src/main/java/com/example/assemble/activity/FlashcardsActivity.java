@@ -13,7 +13,6 @@ import com.example.assemble.R;
 import com.example.assemble.model.Flashcard;
 import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.util.FlashcardAdapter;
-import com.example.assemble.database.FlashcardsStub;
 
 import java.util.List;
 
@@ -22,8 +21,8 @@ public class FlashcardsActivity extends AppCompatActivity {
     private EditText questionEditText;
     private EditText answerEditText;
     private Button addFlashcardButton;
+    private Button deleteFlashcardButton;
     private ListView flashcardsListView;
-    private FlashcardsStub flashcardStub;
     private FlashcardManager flashcardManager;
     private String username;
 
@@ -36,15 +35,16 @@ public class FlashcardsActivity extends AppCompatActivity {
         answerEditText = findViewById(R.id.answerEditText);
         addFlashcardButton = findViewById(R.id.addFlashcardButton);
         flashcardsListView = findViewById(R.id.flashcardsListView);
-        flashcardStub = new FlashcardsStub();
         flashcardManager = new FlashcardManager(this);
         username = getIntent().getStringExtra("USER_NAME");
+        flashcardManager.addFlashcard(username, "DEFAULT_QUESTION", "DEFAULT_ANSWER");
+
         addFlashcardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String question = "Question: " + questionEditText.getText().toString();
                 String answer = "Answer: " + answerEditText.getText().toString();
-                flashcardManager.addFlashcard(username,question,answer);
+                flashcardManager.addFlashcard(username, question, answer);
                 Toast.makeText(FlashcardsActivity.this, "Flashcard added", Toast.LENGTH_SHORT).show();
                 loadFlashcards();
             }
@@ -55,7 +55,8 @@ public class FlashcardsActivity extends AppCompatActivity {
 
     private void loadFlashcards() {
         List<Flashcard> flashcards = flashcardManager.getFlashcards(username);
-        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
+        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards, flashcardManager, username);
         flashcardsListView.setAdapter(adapter);
     }
+
 }

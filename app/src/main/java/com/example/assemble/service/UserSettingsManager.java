@@ -28,13 +28,6 @@ public class UserSettingsManager {
         return userProfile;
     }
 
-    public boolean saveUserProfile(String username, String password) {
-        Log.d(TAG, "Saving user profile: " + username);
-        User userProfile = new User(currentUserId, username, password);
-        userManager.update(currentUserId, userProfile);
-        return true; // Return true on success
-    }
-
     public boolean updateUserProfile(String username, String password) {
         Log.d(TAG, "Updating user profile for ID: " + currentUserId);
         User userProfile = new User(currentUserId, username, password);
