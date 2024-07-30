@@ -2,10 +2,17 @@ package com.example.assemble;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.ArgumentMatchers.matches;
+
 import android.content.Context;
 import org.mockito.Mockito;
+
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -32,6 +39,8 @@ public class NoteListsTest {
     public void set_up() {
         mockContext = Mockito.mock(Context.class);
         noteManager = NoteManager.getInstance(mockContext);
+        noteManager.init("");
+        noteManager.clearNotes();
     }
     @Test
     public void search_note() {
@@ -48,7 +57,7 @@ public class NoteListsTest {
             onView(withId(R.id.search_note_text)).perform(click()).perform(typeText("test"));
             onView(withId(R.id.search_note_button)).perform(click());
 
-            //onView(withId(R.id.notes)).check(matches(atPosition(0, withText("this has test in it"))));
+            onView(withId(R.id.notes)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText("this has test in it"))));
 
         } catch (InvalidNoteException exception) {
             exception.printStackTrace();

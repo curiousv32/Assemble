@@ -41,10 +41,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
-    implementation (libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
-    androidTestImplementation(libs.mockito.mockito.inline)
-    androidTestImplementation(libs.mockito.mockito.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core) // Add Mockito core from version catalog
@@ -55,5 +53,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.mockito.mockito.core)
+    androidTestImplementation(libs.mockito.mockito.inline)
     testImplementation(libs.androidx.core.v120)
 }
