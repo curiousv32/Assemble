@@ -1,23 +1,32 @@
 package com.example.assemble.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.assemble.R;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
-public class PomodoroActivity extends AppCompatActivity {
+public class PomodoroActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView timerTextView;
     private Button startButton, resetButton;
@@ -28,11 +37,24 @@ public class PomodoroActivity extends AppCompatActivity {
 
     // Preset intervals in minutes
     private final int[] minuteValues = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60};
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pomodoro);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         timerTextView = findViewById(R.id.timerTextView);
         startButton = findViewById(R.id.startButton);
@@ -144,5 +166,33 @@ public class PomodoroActivity extends AppCompatActivity {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
         ringtone.play();
+    }
+
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            startActivity(new Intent(this, HomePageActivity.class));
+        } else if (id == R.id.nav_todo) {
+            startActivity(new Intent(this, TodoListActivity.class));
+        } else if (id == R.id.nav_notes) {
+            startActivity(new Intent(this, NoteListsActivity.class));
+        } else if (id == R.id.nav_flashcards) {
+            startActivity(new Intent(this, FlashcardsActivity.class));
+        } else if (id == R.id.nav_timer) {
+            // already on timer
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -28,4 +28,6 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="pomodoro_timer">Pomodoro Timer</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>
