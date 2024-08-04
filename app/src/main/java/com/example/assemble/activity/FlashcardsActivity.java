@@ -30,8 +30,8 @@ public class FlashcardsActivity extends AppCompatActivity implements NavigationV
     private EditText questionEditText;
     private EditText answerEditText;
     private Button addFlashcardButton;
+    private Button deleteFlashcardButton;
     private ListView flashcardsListView;
-    private FlashcardsStub flashcardStub;
     private FlashcardManager flashcardManager;
     private String username;
     private DrawerLayout drawerLayout;
@@ -57,7 +57,6 @@ public class FlashcardsActivity extends AppCompatActivity implements NavigationV
         answerEditText = findViewById(R.id.answerEditText);
         addFlashcardButton = findViewById(R.id.addFlashcardButton);
         flashcardsListView = findViewById(R.id.flashcardsListView);
-        flashcardStub = new FlashcardsStub();
         flashcardManager = new FlashcardManager(this);
         username = getIntent().getStringExtra("USER_NAME");
 
@@ -77,7 +76,7 @@ public class FlashcardsActivity extends AppCompatActivity implements NavigationV
 
     private void loadFlashcards() {
         List<Flashcard> flashcards = flashcardManager.getFlashcards(username);
-        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards);
+        FlashcardAdapter adapter = new FlashcardAdapter(this, flashcards, flashcardManager, username);
         flashcardsListView.setAdapter(adapter);
     }
 

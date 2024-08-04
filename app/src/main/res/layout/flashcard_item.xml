@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_margin="8dp"
-    android:background="@drawable/flashcard_background"
-    android:elevation="4dp">
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/flashcardTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/flashcardQuestionTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:gravity="center_vertical" />
+        android:layout_weight="1"
+        android:text="Question"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/deleteFlashcardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete" />
 </LinearLayout>
