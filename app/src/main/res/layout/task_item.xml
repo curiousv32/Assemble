@@ -61,6 +61,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delete" />
+
+        <Button
+            android:id="@+id/relatedNotesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/related_notes" />
+
     </LinearLayout>
 
 </RelativeLayout>
