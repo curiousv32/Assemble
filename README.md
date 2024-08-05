@@ -34,8 +34,8 @@ If you don't have the presentation site folder already:
 
 1. **Clone the repository:**
     ```sh
-    git clone <https://github.com/curiousv32/study-app-site.github.io.git>
-    cd study-app-site.github.io
+    git clone <https://github.com/curiousv32/curiousv.github.io.git>
+    cd curiousv.github.io
     ```
 
 If you already have the folder locally:
