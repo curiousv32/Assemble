@@ -23,15 +23,16 @@ import com.example.assemble.service.NoteManager;
 import com.example.assemble.service.TaskManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Context context;
-    private ArrayList<Note> notes;
+    private List<Note> notes;
     private UUID currentTaskId; // Curr task ID to link notes to
 
-    public NoteAdapter(Context context, ArrayList<Note> notes, UUID taskId) {
+    public NoteAdapter(Context context, List<Note> notes, UUID taskId) {
         this.context = context;
         this.notes = notes;
         this.currentTaskId = taskId;

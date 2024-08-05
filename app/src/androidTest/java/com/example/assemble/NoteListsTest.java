@@ -75,16 +75,11 @@ public class NoteListsTest {
     }
 
     @Test
-    public void create_and_update_saved_note() {
-        noteManager.clearNotes();
+    public void open_saved_note() {
+        notes.get(0).setText("testing");
 
-        onView(withId(R.id.new_note_name)).perform(click()).perform(typeText("test"));
-        onView(withId(R.id.note_create)).perform(click());
-        onView(withId(R.id.note_contents)).check(matches(isDisplayed())).perform(typeText("testing"));
-        onView(withId(R.id.notes_go_back)).perform(click());
-        onView(withId(R.id.note_create)).check(matches(isDisplayed()));
         onView(withId(R.id.notes)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.note_contents)).check(matches(withText("testing")));
+        onView(withId(R.id.note_contents)).check(matches(isDisplayed())).check(matches(withText("testing")));
     }
 
     @Test

@@ -45,8 +45,9 @@ public class NoteListsActivity extends AppCompatActivity {
         RecyclerView noteLists = findViewById(R.id.notes);
         noteLists.setLayoutManager(new LinearLayoutManager(this));
 
-        initializeAdapter(this, notes, noteLists);
         UUID taskId = getIntent().hasExtra("TASK_ID") ? UUID.fromString(getIntent().getStringExtra("TASK_ID")) : null;
+
+        initializeAdapter(this, notes, noteLists, taskId);
         RecyclerView.Adapter<NoteAdapter.NoteViewHolder> adapter = new NoteAdapter(this, notes, taskId);
         noteLists.setAdapter(adapter);
 
@@ -81,20 +82,20 @@ public class NoteListsActivity extends AppCompatActivity {
 
             if (text.length() >= NoteManager.MIN_NOTE_SEARCH_SIZE) {
                 List<Note> results = noteManager.searchNotes(text);
-                initializeAdapter(this, results, noteLists);
+                initializeAdapter(this, results, noteLists, taskId);
             } else {
                 Toast.makeText(this, "Must be at least 3 characters", Toast.LENGTH_LONG).show();
             }
         });
 
         resetSearch.setOnClickListener(v -> {
-            initializeAdapter(this, notes, noteLists);
+            initializeAdapter(this, notes, noteLists, taskId);
             searchText.setText("");
         });
     }
 
-    private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view) {
-        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> newAdapter = new NoteAdapter(context, notesToShow);
+    private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view, UUID taskId) {
+        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> newAdapter = new NoteAdapter(context, notesToShow, taskId);
         view.setAdapter(newAdapter);
     }
 }
