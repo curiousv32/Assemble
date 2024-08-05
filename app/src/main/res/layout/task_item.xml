@@ -1,50 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/todoitem_background"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/taskTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:text="@string/task_title"
         android:textColor="#000"
-        android:text="@string/task_title" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/taskDescription"
+        android:layout_below="@id/taskTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:text="@string/task_description"
         android:textColor="#666"
-        android:text="@string/task_description" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/taskDeadline"
+        android:layout_below="@id/taskDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:text="@string/task_deadline"
         android:textColor="#333"
-        android:text="@string/task_deadline" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/taskPriority"
+        android:layout_below="@id/taskDeadline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/task_priority"
         android:textColor="#0073FF"
         android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/deleteButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/delete"
-        />
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        tools:ignore="RelativeOverlap">
 
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete" />
+
+        <Button
+            android:id="@+id/relatedNotesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/related_notes" />
+
+    </LinearLayout>
+
+</RelativeLayout>

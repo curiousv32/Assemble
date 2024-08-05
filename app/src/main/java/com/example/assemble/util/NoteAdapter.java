@@ -16,22 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assemble.R;
-import com.example.assemble.activity.HomePageActivity;
 import com.example.assemble.activity.NoteActivity;
 import com.example.assemble.model.Note;
+import com.example.assemble.model.Task;
 import com.example.assemble.service.NoteManager;
+import com.example.assemble.service.TaskManager;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Context context;
-    private List<Note> notes;
+    private ArrayList<Note> notes;
+    private UUID currentTaskId; // Curr task ID to link notes to
 
-    public NoteAdapter(Context context, List<Note> notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes, UUID taskId) {
         this.context = context;
         this.notes = notes;
+        this.currentTaskId = taskId;
     }
 
     @NonNull
@@ -48,6 +51,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         holder.noteName.setText(note.getName());
         holder.lastUpdatedDate.setText(note.getLastUpdatedDate().toString());
+
+        if (currentTaskId == null) {
+            holder.linkButton.setVisibility(View.GONE);
+        } else {
+            holder.linkButton.setVisibility(View.VISIBLE);
+            holder.linkButton.setOnClickListener(v -> {
+                TaskManager.getInstance(context).linkNoteToTask(currentTaskId, note.getID());
+                Toast.makeText(context, "Linking " + note.getName() + " to task: " + TaskManager.getInstance(context).get(currentTaskId, Task.class).getTitle(), Toast.LENGTH_SHORT).show();
+            });
+        }
 
         holder.itemView.setOnClickListener(v -> {
             NoteManager.getInstance(context).setOpenedNote(note);
@@ -98,6 +111,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         TextView lastUpdatedDate;
         Button deleteButton;
         Button renameButton;
+        Button linkButton;
 
         public NoteViewHolder(@NonNull View noteView) {
             super(noteView);
@@ -106,6 +120,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             lastUpdatedDate = noteView.findViewById(R.id.note_last_updated);
             deleteButton = noteView.findViewById(R.id.delete_button);
             renameButton = noteView.findViewById(R.id.rename_button);
+            linkButton = noteView.findViewById(R.id.link_to_task_button);
         }
     }
 }

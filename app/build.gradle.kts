@@ -54,9 +54,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
+    testImplementation(libs.robolectric)
     androidTestImplementation(libs.androidx.espresso.contrib)
-    androidTestImplementation(libs.mockito.core)
-    androidTestImplementation(libs.mockito.android)
-    //androidTestImplementation(libs.mockito.inline)
     testImplementation(libs.androidx.core.v120)
 }

@@ -15,3 +15,41 @@ Assemble will be a mobile application integrating note-taking, study tools, and 
 
 # Success Criteria:
 The success of Assemble will be measured by the following criteria: Firstly, at least 80% of users should report improved efficiency and quality of their notes after using the note-taking tool. Secondly, at least 80% of students should report that the integrated study tool with flashcards has enhanced their revision process. Finally, users should be able to complete 90% of their study tasks by the deadline because of the timer & to-do list feature.
+
+## Assemble App Project Presentation Site
+
+This repository contains the static site for the Assemble App project presentation.
+
+### Prerequisites
+
+Before you can run this site, ensure you have the following dependencies installed:
+
+- Ruby
+- Bundler
+- Jekyll
+
+### Installation
+
+If you don't have the presentation site folder already:
+
+1. **Clone the repository:**
+    ```sh
+    git clone <https://github.com/curiousv32/curiousv.github.io.git>
+    cd curiousv.github.io
+    ```
+
+If you already have the folder locally:
+
+2. **Navigate to the project directory and install the dependencies:**
+    ```sh
+    cd <path-to-your-project-directory>
+    bundle install
+    ```
+
+### Running the Site
+
+To serve the site locally, use the following command:
+
+```sh
+bundle exec jekyll s
+```

@@ -1,9 +1,10 @@
 [versions]
 agp = "8.4.0"
+androidxJunit = "1.1.3"
 appcompatVersion = "1.4.0"
-core = "1.5.0"
-kotlin = "1.9.0"
 coreKtx = "1.10.1"
+kotlin = "1.9.0"
+core = "1.2.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -12,35 +13,33 @@ appcompat = "1.6.1"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
-androidx-test-core = "1.5.0"
-androidx-test-rules = "1.5.0"
-androidx-test-runner = "1.5.2"
+androidxTestCore = "1.5.0"
+androidxTestRules = "1.5.0"
+androidxTestRunner = "1.5.2"
 mockito = "3.12.4"
-mockitoCore = "5.12.0"
-inline = "2.20.0"
-mockitoInline = "5.2.0"
+robolectric = "4.8.1"
 
 [libraries]
 androidx-appcompat-v140 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-core-v120 = { module = "androidx.test:core", version.ref = "core" }
+androidx-core-v120 = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-junit-v113 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-rules-v140 = { module = "androidx.test:rules", version.ref = "androidxTestRules" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
 androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
-androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
-mockito-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-inline = { group = "org.mockito", name = "inline", version.ref = "inline" }
-mockito-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
