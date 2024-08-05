@@ -27,4 +27,9 @@
     <string name="task_priority">Priority</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="related_notes">Related Notes</string>
+    <string name="note_title">Note Title</string>
+    <string name="remove">Remove</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="link_to_task">Link to Task</string>
 </resources>

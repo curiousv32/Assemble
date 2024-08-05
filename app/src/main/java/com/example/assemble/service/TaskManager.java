@@ -7,6 +7,7 @@ import com.example.assemble.database.DatabaseManager;
 import com.example.assemble.exceptions.InvalidTaskException;
 import com.example.assemble.interfaces.ITaskManager;
 import com.example.assemble.model.Task;
+import com.example.assemble.model.Note;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,7 +60,7 @@ public class TaskManager implements ITaskManager {
     }
 
     public Task createTask(String title, String description, String deadline, String priority, String status) throws InvalidTaskException {
-        Task task = new Task(UUID.randomUUID(), title, description, new java.util.Date(), priority, status);
+        Task task = new Task(UUID.randomUUID(), title, description, new java.util.Date(), priority, status, new ArrayList<>());
         if (!useSQLDatabase) {
             tasks.put(task.getId(), task);
             return task;
@@ -106,7 +107,7 @@ public class TaskManager implements ITaskManager {
                 if (rs.next()) {
                     task = new Task(UUID.fromString(rs.getString("id")),
                             rs.getString("title"), rs.getString("description"),
-                            rs.getTimestamp("deadline"), rs.getString("priority"), rs.getString("status"));
+                            rs.getTimestamp("deadline"), rs.getString("priority"), rs.getString("status"), new ArrayList<>());
                 }
             }
         } catch (SQLException e) {
@@ -148,7 +149,7 @@ public class TaskManager implements ITaskManager {
     @Override
     public void addDefaultItem() {
         try {
-            Task defaultTask = new Task(defaultTaskId, DEFAULT_TASK_NAME, DEFAULT_TASK_DESCRIPTION, new java.util.Date(), DEFAULT_TASK_PRIORITY, DEFAULT_TASK_STATUS);
+            Task defaultTask = new Task(defaultTaskId, DEFAULT_TASK_NAME, DEFAULT_TASK_DESCRIPTION, new java.util.Date(), DEFAULT_TASK_PRIORITY, DEFAULT_TASK_STATUS, new ArrayList<>());
             add(defaultTask);
         } catch (InvalidTaskException e) {
             e.printStackTrace();
@@ -176,7 +177,7 @@ public class TaskManager implements ITaskManager {
                 while (rs.next()) {
                     Task task = new Task(UUID.fromString(rs.getString("id")),
                             rs.getString("title"), rs.getString("description"),
-                            rs.getTimestamp("deadline"), rs.getString("priority"), rs.getString("status"));
+                            rs.getTimestamp("deadline"), rs.getString("priority"), rs.getString("status"), new ArrayList<>());
                     tasks.add(task);
                 }
             }
@@ -203,4 +204,50 @@ public class TaskManager implements ITaskManager {
         }
         return taskList;
     }
+
+    public void linkNoteToTask(UUID taskId, UUID noteId) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("MERGE INTO tasknotelinks USING (VALUES(?, ?)) AS vals(task_id, note_id)\n" +
+                     "    ON tasknotelinks.task_id = vals.task_id AND tasknotelinks.note_id = vals.note_id\n" +
+                     "    WHEN MATCHED THEN UPDATE SET note_id = vals.note_id\n" +
+                     "    WHEN NOT MATCHED THEN INSERT (task_id, note_id) VALUES (vals.task_id, vals.note_id);\n")) {
+            pstmt.setString(1, taskId.toString());
+            pstmt.setString(2, noteId.toString());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Note> getLinkedNotesForTask(UUID taskId) throws SQLException {
+        List<Note> linkedNotes = new ArrayList<>();
+        if (!useSQLDatabase) return linkedNotes;
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT n.* FROM notes n INNER JOIN tasknotelinks tnl ON n.id = tnl.note_id WHERE tnl.task_id = ?")) {
+            pstmt.setString(1, taskId.toString());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    linkedNotes.add(new Note(
+                            UUID.fromString(rs.getString("id")),
+                            rs.getString("name")
+                    ));
+                }
+            }
+        }
+        return linkedNotes;
+    }
+
+    public void removeLinkedNote(UUID taskId, UUID noteId) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM tasknotelinks WHERE task_id = ? AND note_id = ?")) {
+            pstmt.setString(1, taskId.toString());
+            pstmt.setString(2, noteId.toString());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 }

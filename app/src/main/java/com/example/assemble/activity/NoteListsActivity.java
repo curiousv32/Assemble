@@ -18,6 +18,7 @@ import com.example.assemble.service.NoteManager;
 import com.example.assemble.util.NoteAdapter;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class NoteListsActivity extends AppCompatActivity {
 
@@ -31,11 +32,11 @@ public class NoteListsActivity extends AppCompatActivity {
         NoteManager noteManager = NoteManager.getInstance(this);
 
         ArrayList<Note> notes = new ArrayList<>(noteManager.getNotes());
-
         RecyclerView noteLists = findViewById(R.id.notes);
         noteLists.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> adapter = new NoteAdapter(this, notes);
 
+        UUID taskId = getIntent().hasExtra("TASK_ID") ? UUID.fromString(getIntent().getStringExtra("TASK_ID")) : null;
+        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> adapter = new NoteAdapter(this, notes, taskId);
         noteLists.setAdapter(adapter);
 
         createNote.setOnClickListener(v -> {
@@ -44,7 +45,6 @@ public class NoteListsActivity extends AppCompatActivity {
                 if (!noteManager.contains(name.getText().toString())) {
                     try {
                         Note note = noteManager.createNote(name.getText().toString());
-
                         if (note != null) {
                             noteManager.setOpenedNote(note);
                             Intent intent = new Intent(this, NoteActivity.class);
