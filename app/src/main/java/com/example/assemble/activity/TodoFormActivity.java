@@ -17,6 +17,7 @@ import com.example.assemble.service.TaskManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -88,11 +89,11 @@ public class TodoFormActivity extends AppCompatActivity {
 
         try {
             if (taskId == null) {
-                Task newTask = new Task(UUID.randomUUID(), title, description, parsedDate, priority, "Pending");
+                Task newTask = new Task(UUID.randomUUID(), title, description, parsedDate, priority, "Pending", new ArrayList<>() );
                 taskManager.add(newTask);
                 Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show();
             } else {
-                Task existingTask = new Task(taskId, title, description, parsedDate, priority, "Pending");
+                Task existingTask = new Task(taskId, title, description, parsedDate, priority, "Pending", new ArrayList<>());
                 taskManager.update(taskId, existingTask);
                 Toast.makeText(this, "Task updated successfully!", Toast.LENGTH_SHORT).show();
             }

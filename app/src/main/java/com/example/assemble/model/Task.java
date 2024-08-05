@@ -1,6 +1,7 @@
 package com.example.assemble.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Task {
@@ -10,14 +11,16 @@ public class Task {
     private Date deadline;
     private String priority;
     private String status;
+    private List<UUID> relatedNotes;
 
-    public Task(UUID id, String title, String description, Date deadline, String priority, String status) {
+    public Task(UUID id, String title, String description, Date deadline, String priority, String status, List<UUID> relatedNotes) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.deadline = deadline;
         this.priority = priority;
         this.status = status;
+        this.relatedNotes = relatedNotes;
     }
 
     public UUID getId() {
@@ -66,5 +69,13 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<UUID> getRelatedNotes() {
+        return relatedNotes;
+    }
+
+    public void setRelatedNotes(List<UUID> relatedNotes) {
+        this.relatedNotes = relatedNotes;
     }
 }
