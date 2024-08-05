@@ -55,6 +55,6 @@ public class Note {
     public Date getCreationDate() { return creationDate; }
 
     public boolean equals(Note other) {
-        return noteUUID.toString().equals(other.noteUUID.toString());
+        return other != null && noteUUID.toString().equals(other.noteUUID.toString());
     }
 }

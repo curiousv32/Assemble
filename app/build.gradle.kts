@@ -46,7 +46,8 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core) // Add Mockito core from version catalog
-    testImplementation(libs.mockito.inline) // Add Mockito inline from version catalog
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.android)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -54,7 +55,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.espresso.contrib)
-    androidTestImplementation(libs.mockito.mockito.core)
-    androidTestImplementation(libs.mockito.mockito.inline)
+    androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.mockito.android)
+    //androidTestImplementation(libs.mockito.inline)
     testImplementation(libs.androidx.core.v120)
 }

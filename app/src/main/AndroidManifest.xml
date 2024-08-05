@@ -31,7 +31,8 @@
         </activity>
         <activity
             android:name="com.example.assemble.activity.NoteListsActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name="com.example.assemble.activity.HomePageActivity"

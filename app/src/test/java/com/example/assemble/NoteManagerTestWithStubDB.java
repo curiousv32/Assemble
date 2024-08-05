@@ -31,11 +31,11 @@ public class NoteManagerTestWithStubDB {
         DatabaseManager.setUseSQLDatabase(false);
         noteManager = NoteManager.getInstance(mockContext);
         noteManager.clearNotes(); // Clean notes after each test
+        noteManager.init(UUID.randomUUID().toString());
     }
 
     @Test
     public void create_succeeded_withStubDB() {
-        noteManager.init("");
         int size = noteManager.getNotesSize();
         try {
             Note newNote = new Note(UUID.randomUUID(), "test");
@@ -49,7 +49,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void saveNote_withStubDB() {
-        noteManager.init("");
         try {
             Note newNote = new Note(UUID.randomUUID(), "test");
             noteManager.add(newNote);
@@ -63,7 +62,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNote_succeed_withStubDB() {
-        noteManager.init("");
         try {
             Note createdNote = new Note(UUID.randomUUID(), "test");
             noteManager.add(createdNote);
@@ -76,7 +74,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNote_invalid_withStubDB() {
-        noteManager.init("");
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.get(randomUUID, Note.class);
         assertNull("Should not find a non-existent note", note);
@@ -84,7 +81,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNoteByName_succeed_withStubDB() {
-        noteManager.init("");
         try {
             UUID id = UUID.randomUUID();
             Note createdNote = new Note(id, "test");
@@ -98,7 +94,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void searchNotes_filter_withStubDB() {
-        noteManager.init("");
         try {
             Note createdNote1 = new Note(UUID.randomUUID(), "test1");
             Note createdNote2 = new Note(UUID.randomUUID(), "test2");
@@ -122,7 +117,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void searchNotes_no_results_withStubDB() {
-        noteManager.init("");
         try {
             Note createdNote1 = new Note(UUID.randomUUID(), "test1");
             Note createdNote2 = new Note(UUID.randomUUID(), "test2");
@@ -144,7 +138,7 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void delete_withStubDB() {
-        noteManager.init("");
+        noteManager.clearNotes();
         try {
             Note createdNote1 = new Note(UUID.randomUUID(), "test1");
             Note createdNote2 = new Note(UUID.randomUUID(), "test2");
@@ -168,7 +162,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void rename_withStubDB() {
-        noteManager.init("");
         try {
             Note createdNote1 = new Note(UUID.randomUUID(), "test1");
             Note createdNote2 = new Note(UUID.randomUUID(), "test2");

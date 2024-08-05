@@ -36,7 +36,8 @@ androidx-test-core = { group = "androidx.test", name = "core", version.ref = "an
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
 mockito-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 inline = { group = "org.mockito", name = "inline", version.ref = "inline" }
 mockito-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }

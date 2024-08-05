@@ -67,10 +67,12 @@ public class DatabaseManager {
     public void clearDatabase(){
         try (Connection connection = DriverManager.getConnection(this.dbPath, JDBC_USER, JDBC_PASSWORD);
              Statement statement = connection.createStatement()) {
-            String dropFlashcardsTableSQL = "DROP TABLE IF EXISTS flashcards;";
+            String dropFlashcardsTableSQL = "DROP TABLE IF EXISTS flashcards";
             String dropUsersTableSQL = "DROP TABLE IF EXISTS users";
+            String notesTableSQL = "DROP TABLE IF EXISTS notes";
             statement.executeUpdate(dropFlashcardsTableSQL);
             statement.executeUpdate(dropUsersTableSQL);
+            statement.executeUpdate(notesTableSQL);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -75,19 +75,17 @@ public class NoteManager implements INoteManager {
 
     @Override
     public void add(Note note) throws InvalidNoteException {
-        if (!useSQLDatabase) {
-            notes.put(note.getID(), note);
-            return;
+        if (useSQLDatabase) {
+            dbManager.runUpdateQuery(
+                    "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
+                    note.getID().toString(),
+                    note.getName(),
+                    new java.sql.Timestamp(note.getCreationDate().getTime()),
+                    new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
+                    note.getText(),
+                    ownerId
+            );
         }
-        dbManager.runUpdateQuery(
-                "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
-                note.getID().toString(),
-                note.getName(),
-                new java.sql.Timestamp(note.getCreationDate().getTime()),
-                new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
-                note.getText(),
-                ownerId
-        );
         notes.put(note.getID(), note);
     }
 
