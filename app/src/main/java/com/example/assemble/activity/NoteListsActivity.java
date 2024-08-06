@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,7 +59,6 @@ public class NoteListsActivity extends AppCompatActivity implements NavigationVi
         TextView name = findViewById(R.id.new_note_name);
         TextView searchText = findViewById(R.id.search_note_text);
 
-        EditText name = findViewById(R.id.new_note_name);
         NoteManager noteManager = NoteManager.getInstance(this);
 
         List<Note> notes = new ArrayList<>(noteManager.getNotes());
