@@ -6,6 +6,7 @@ public class SessionManager {
     private static SessionManager instance;
     private UUID currentUserID;
     private String currentUsername;
+    private UUID defaultOwnerID = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
     private SessionManager() {}
 
@@ -35,5 +36,8 @@ public class SessionManager {
     public void clearSession() {
         currentUserID = null;
         currentUsername = null; // Clear the username as well
+    }
+    public UUID getDefaultOwnerID() {
+        return defaultOwnerID;
     }
 }

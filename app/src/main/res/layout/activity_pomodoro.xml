@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:openDrawer="start">
-
     <!-- Main content -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,34 +20,44 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="32dp">
 
-        <EditText
-            android:id="@+id/questionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Question"
-            android:layout_marginTop="16dp" />
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="00:00"
+        android:textSize="72sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true" />
 
-        <EditText
-            android:id="@+id/answerEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer"
-            android:layout_marginTop="8dp" />
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/timerTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="Start"
+        android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/addFlashcardButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Flashcard"
-            android:layout_marginTop="8dp" />
-
-        <ListView
-            android:id="@+id/flashcardsListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp" />
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/startButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Reset"
+        android:textSize="24sp" />
+</RelativeLayout>
     </LinearLayout>
 
     <!-- Navigation drawer -->
@@ -58,5 +67,4 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/drawer_menu" />
-
 </androidx.drawerlayout.widget.DrawerLayout>
