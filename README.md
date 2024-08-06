@@ -34,7 +34,7 @@ If you don't have the presentation site folder already:
 
 1. **Clone the repository:**
     ```sh
-    git clone <https://github.com/curiousv32/curiousv.github.io.git>
+    git clone <https://github.com/curiousv32/curiousv32.github.io.git>
     cd curiousv.github.io
     ```
 
@@ -53,3 +53,9 @@ To serve the site locally, use the following command:
 ```sh
 bundle exec jekyll s
 ```
+
+## Live Presentation Site
+
+You can view the live presentation site directly at the following link:
+
+[Assemble App Project Presentation](https://curiousv32.github.io/posts/study-app-project-presentation/)
