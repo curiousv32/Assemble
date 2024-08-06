@@ -39,7 +39,6 @@ public class FlashcardManager {
                 preparedStatement.setString(2, question);
                 preparedStatement.setString(3, answer);
                 preparedStatement.executeUpdate();
-                // Integrity violation constraint here because the user is not found in the users table
             } catch (SQLException e) {
                 Log.e("database error", "Error adding flashcard: " + e.getMessage());
             }
