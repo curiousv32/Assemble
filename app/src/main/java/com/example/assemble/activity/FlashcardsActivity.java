@@ -21,7 +21,6 @@ import com.example.assemble.model.Flashcard;
 import com.example.assemble.service.FlashcardManager;
 import com.example.assemble.util.FlashcardAdapter;
 import com.google.android.material.navigation.NavigationView;
-import com.example.assemble.database.FlashcardsStub;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class FlashcardsActivity extends AppCompatActivity implements NavigationV
     private EditText questionEditText;
     private EditText answerEditText;
     private Button addFlashcardButton;
-    private Button deleteFlashcardButton;
     private ListView flashcardsListView;
     private FlashcardManager flashcardManager;
     private String username;
@@ -91,7 +89,7 @@ public class FlashcardsActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_notes) {
             startActivity(new Intent(this, NoteListsActivity.class));
         } else if (id == R.id.nav_flashcards) {
-            // Already on Flashcards Activity
+            // stay here
         } else if (id == R.id.nav_timer) {
             startActivity(new Intent(this, PomodoroActivity.class));
         }
