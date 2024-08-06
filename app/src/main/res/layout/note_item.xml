@@ -29,12 +29,28 @@
                 android:layout_height="wrap_content"
                 android:text="@string/last_updated"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
         </LinearLayout>
+
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete" />
+
+        <Button
+            android:id="@+id/rename_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rename" />
 
         <Button
             android:id="@+id/link_to_task_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/link_to_task" />
+
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

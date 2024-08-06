@@ -1,5 +1,8 @@
 package com.example.assemble.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,6 +22,7 @@ import com.example.assemble.util.NoteAdapter;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.List;
 
 public class NoteListsActivity extends AppCompatActivity {
 
@@ -28,14 +32,22 @@ public class NoteListsActivity extends AppCompatActivity {
         setContentView(R.layout.note_lists_page);
 
         Button createNote = findViewById(R.id.note_create);
+        Button searchNote = findViewById(R.id.search_note_button);
+        Button resetSearch = findViewById(R.id.reset_search);
+
         TextView name = findViewById(R.id.new_note_name);
+        TextView searchText = findViewById(R.id.search_note_text);
+
         NoteManager noteManager = NoteManager.getInstance(this);
 
-        ArrayList<Note> notes = new ArrayList<>(noteManager.getNotes());
+        List<Note> notes = new ArrayList<>(noteManager.getNotes());
+
         RecyclerView noteLists = findViewById(R.id.notes);
         noteLists.setLayoutManager(new LinearLayoutManager(this));
 
         UUID taskId = getIntent().hasExtra("TASK_ID") ? UUID.fromString(getIntent().getStringExtra("TASK_ID")) : null;
+
+        initializeAdapter(this, notes, noteLists, taskId);
         RecyclerView.Adapter<NoteAdapter.NoteViewHolder> adapter = new NoteAdapter(this, notes, taskId);
         noteLists.setAdapter(adapter);
 
@@ -64,5 +76,26 @@ public class NoteListsActivity extends AppCompatActivity {
                 name.setText("");
             }
         });
+
+        searchNote.setOnClickListener(v -> {
+            String text = searchText.getText().toString();
+
+            if (text.length() >= NoteManager.MIN_NOTE_SEARCH_SIZE) {
+                List<Note> results = noteManager.searchNotes(text);
+                initializeAdapter(this, results, noteLists, taskId);
+            } else {
+                Toast.makeText(this, "Must be at least 3 characters", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        resetSearch.setOnClickListener(v -> {
+            initializeAdapter(this, notes, noteLists, taskId);
+            searchText.setText("");
+        });
+    }
+
+    private void initializeAdapter(Context context, List<Note> notesToShow, RecyclerView view, UUID taskId) {
+        RecyclerView.Adapter<NoteAdapter.NoteViewHolder> newAdapter = new NoteAdapter(context, notesToShow, taskId);
+        view.setAdapter(newAdapter);
     }
 }

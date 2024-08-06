@@ -18,6 +18,10 @@ public class Note {
         this.lastUpdatedDate = new Date();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setCreationDate() {
         this.creationDate = new Date();
     }
@@ -51,6 +55,6 @@ public class Note {
     public Date getCreationDate() { return creationDate; }
 
     public boolean equals(Note other) {
-        return noteUUID.toString().equals(other.noteUUID.toString());
+        return other != null && noteUUID.toString().equals(other.noteUUID.toString());
     }
 }

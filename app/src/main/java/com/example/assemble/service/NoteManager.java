@@ -19,10 +19,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class NoteManager implements INoteManager {
 
     public static final int MAX_NOTE_NAME_SIZE = 10;
+    public static final int MIN_NOTE_SEARCH_SIZE = 3;
 
     private static NoteManager REFERENCE;
     private DatabaseManager dbManager;
@@ -73,19 +75,17 @@ public class NoteManager implements INoteManager {
 
     @Override
     public void add(Note note) throws InvalidNoteException {
-        if (!useSQLDatabase) {
-            notes.put(note.getID(), note);
-            return;
+        if (useSQLDatabase) {
+            dbManager.runUpdateQuery(
+                    "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
+                    note.getID().toString(),
+                    note.getName(),
+                    new java.sql.Timestamp(note.getCreationDate().getTime()),
+                    new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
+                    note.getText(),
+                    ownerId
+            );
         }
-        dbManager.runUpdateQuery(
-                "INSERT INTO notes (id, name, creation_date, last_updated_date, content, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
-                note.getID().toString(),
-                note.getName(),
-                new java.sql.Timestamp(note.getCreationDate().getTime()),
-                new java.sql.Timestamp(note.getLastUpdatedDate().getTime()),
-                note.getText(),
-                ownerId
-        );
         notes.put(note.getID(), note);
     }
 
@@ -146,6 +146,13 @@ public class NoteManager implements INoteManager {
         notes.remove(noteId);
     }
 
+    public void rename(Note note, String newName) {
+        note.setName(newName);
+
+        if (useSQLDatabase) {
+            dbManager.runUpdateQuery("UPDATE notes SET name=? WHERE id=?", newName, note.getID());
+        }
+    }
     @Override
     public void addDefaultItem() {
         try {
@@ -197,5 +204,11 @@ public class NoteManager implements INoteManager {
             e.printStackTrace();
         }
         return notes;
+    }
+
+    public List<Note> searchNotes(String searchText) {
+        return notes.values().stream()
+                .filter(note -> note.getText().contains(searchText))
+                .collect(Collectors.toList());
     }
 }

@@ -3,6 +3,7 @@ package com.example.assemble;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import android.content.Context;
@@ -31,6 +32,7 @@ public class NoteManagerTestWithSQLDB {
         noteManager = NoteManager.getInstance(mockContext);
         initializeDatabase();
         noteManager.clearNotes(); // Clean notes after each test
+        noteManager.init(UUID.randomUUID().toString());
     }
 
     private void initializeDatabase() {
@@ -49,7 +51,8 @@ public class NoteManagerTestWithSQLDB {
                     "name VARCHAR(255) NOT NULL, " +
                     "creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "content VARCHAR(65535))";
+                    "content VARCHAR(65535), " +
+                    "owner_id CHAR(36))";
             try (PreparedStatement stmt = conn.prepareStatement(createNoteTable)) {
                 stmt.executeUpdate();
             }
@@ -60,7 +63,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void init_returnsNonNull() {
-        noteManager.init("");
         if (noteManager.getNotes() == null) {
             fail("Notes should not be null");
         }
@@ -68,7 +70,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void create_fails_withSQLDB() {
-        noteManager.init("");
         try {
             noteManager.add(new Note(UUID.randomUUID(), "test"));
         } catch (InvalidNoteException e) {
@@ -79,7 +80,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void create_succeeded_withSQLDB() {
-        noteManager.init("");
         int size = noteManager.getNotesSize();
         try {
             Note note = new Note(UUID.randomUUID(), "test");
@@ -93,7 +93,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void saveNote_withSQLDB() {
-        noteManager.init("");
         try {
             Note note = new Note(UUID.randomUUID(), "test");
             noteManager.add(note);
@@ -107,7 +106,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void getNote_succeed_withSQLDB() {
-        noteManager.init("");
         try {
             Note createdNote = new Note(UUID.randomUUID(), "test");
             createdNote.setText("test");
@@ -121,7 +119,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void getNote_invalid_withSQLDB() {
-        noteManager.init("");
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.get(randomUUID, Note.class);
         assertNull("Should not find a non-existent note", note);
@@ -129,7 +126,6 @@ public class NoteManagerTestWithSQLDB {
 
     @Test
     public void getNoteByName_succeed_withSQLDB() {
-        noteManager.init("");
         try {
             UUID id = UUID.randomUUID();
             Note createdNote = new Note(id, "test");
@@ -141,4 +137,36 @@ public class NoteManagerTestWithSQLDB {
         }
     }
 
+    @Test
+    public void delete_succeed_withSQLDB() {
+
+        try {
+            UUID id = UUID.randomUUID();
+            Note createdNote = new Note(id, "test");
+            noteManager.add(createdNote);
+
+            noteManager.delete(id);
+
+            Note foundNote = noteManager.get(id, Note.class);
+            assertNull("Note should be null", foundNote);
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void rename_succeed_withSQLDB() {
+
+        try {
+            UUID id = UUID.randomUUID();
+            Note createdNote = new Note(id, "test");
+            noteManager.add(createdNote);
+
+            noteManager.rename(createdNote, "test2");
+
+            assertEquals("Note name should be changed", "test2", createdNote.getName());
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
 }

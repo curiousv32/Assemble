@@ -13,6 +13,8 @@ import com.example.assemble.model.Note;
 import com.example.assemble.service.NoteManager;
 
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NoteManagerTestWithStubDB {
@@ -29,11 +31,11 @@ public class NoteManagerTestWithStubDB {
         DatabaseManager.setUseSQLDatabase(false);
         noteManager = NoteManager.getInstance(mockContext);
         noteManager.clearNotes(); // Clean notes after each test
+        noteManager.init(UUID.randomUUID().toString());
     }
 
     @Test
     public void create_succeeded_withStubDB() {
-        noteManager.init("");
         int size = noteManager.getNotesSize();
         try {
             Note newNote = new Note(UUID.randomUUID(), "test");
@@ -47,7 +49,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void saveNote_withStubDB() {
-        noteManager.init("");
         try {
             Note newNote = new Note(UUID.randomUUID(), "test");
             noteManager.add(newNote);
@@ -61,7 +62,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNote_succeed_withStubDB() {
-        noteManager.init("");
         try {
             Note createdNote = new Note(UUID.randomUUID(), "test");
             noteManager.add(createdNote);
@@ -74,7 +74,6 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNote_invalid_withStubDB() {
-        noteManager.init("");
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.get(randomUUID, Note.class);
         assertNull("Should not find a non-existent note", note);
@@ -82,13 +81,102 @@ public class NoteManagerTestWithStubDB {
 
     @Test
     public void getNoteByName_succeed_withStubDB() {
-        noteManager.init("");
         try {
             UUID id = UUID.randomUUID();
             Note createdNote = new Note(id, "test");
             noteManager.add(createdNote);
             Note foundNote = noteManager.get(id, Note.class);
             assertTrue("Retrieved note should match created", createdNote.equals(foundNote));
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchNotes_filter_withStubDB() {
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            List<Note> searchResults = noteManager.searchNotes("this is correct");
+
+            assertEquals(searchResults.size(), 1);
+            assertEquals(searchResults.get(0).getName(), "test1");
+            assertEquals(searchResults.get(0).getText(), "this is correct");
+
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void searchNotes_no_results_withStubDB() {
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            List<Note> searchResults = noteManager.searchNotes("this is correct not");
+
+            assertEquals(searchResults.size(), 0);
+
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void delete_withStubDB() {
+        noteManager.clearNotes();
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            noteManager.delete(createdNote1.getID());
+
+            assertEquals(noteManager.getNotes().size(), 1);
+            Optional<Note> optionalNote = noteManager.getNotes().stream().findFirst();
+            assertTrue(optionalNote.isPresent());
+            assertEquals("test2", optionalNote.get().getName());
+        } catch (InvalidNoteException e) {
+            fail("Should not throw an exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void rename_withStubDB() {
+        try {
+            Note createdNote1 = new Note(UUID.randomUUID(), "test1");
+            Note createdNote2 = new Note(UUID.randomUUID(), "test2");
+
+            createdNote1.setText("this is correct");
+            createdNote2.setText("this is not correct");
+
+            noteManager.add(createdNote1);
+            noteManager.add(createdNote2);
+
+            noteManager.rename(createdNote1, "test3");
+
+            assertEquals(createdNote1.getName(), "test3");
+            assertEquals(createdNote2.getName(), "test2");
+
         } catch (InvalidNoteException e) {
             fail("Should not throw an exception: " + e.getMessage());
         }
