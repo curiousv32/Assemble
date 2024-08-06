@@ -18,7 +18,11 @@ The main source code for the Assemble application resides within the following p
     * `LoginPageActivity.java`: Manages the user login process. It likely includes UI elements for entering login credentials, handling authentication logic, and displaying error or success messages based on the login attempt. Optionally, it might provide functionality for password recovery or account creation.
     * `SignUpActivity.java`: Handles user registration or account creation. It likely presents UI elements for entering user information, handling user registration logic, and displaying error or success messages based on the registration attempt. It might also provide options for selecting user preferences or account settings.
     * `NoteActivity.java`: Handles the page when a user opens a  new note. It presents a big text area to input the note, with the ability to switch between notes and go back to the home page.
-
+   * `FlashcardsActivity.java`: Handles the flashcards. It presents a big text for the user to input key notes that the user has made to help them remember what they have studied. It has the option to go back to the home page.
+   * `UserSettingActivity.java`: Handles the user setting options. It includes options the user through UI elements that can be clicked on to make changes to their account either through editing, deleting and picking new changes to thier account.
+   * `TodoListActivity.java`: Handles the to-do list process. It includes a list to which the user can set different activities that they wish to complete over a period of time.
+   * `PomodoroActivity.java`: Handles the pomodoro timer. It includes a timer that the user can set to keep track of the study time and set a rest period to promote efficient study session.
+   
 **Model Package:**
 
 The `model` package in Assemble contains classes that represent the data structures used by the application. These data structures define the underlying information the app manages. In this case, the model package contains classes for entities relevant to the Assemble application's functionalities, such as users, notes, flashcards, and other tasks.
