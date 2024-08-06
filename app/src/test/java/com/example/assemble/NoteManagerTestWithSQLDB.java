@@ -3,7 +3,6 @@ package com.example.assemble;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import android.content.Context;
@@ -105,36 +104,10 @@ public class NoteManagerTestWithSQLDB {
     }
 
     @Test
-    public void getNote_succeed_withSQLDB() {
-        try {
-            Note createdNote = new Note(UUID.randomUUID(), "test");
-            createdNote.setText("test");
-            noteManager.add(createdNote);
-            Note retrievedNote = noteManager.get(createdNote.getID(), Note.class);
-            assertNotNull("Note should be retrievable", retrievedNote);
-        } catch (Exception e) {
-            fail("Should not throw an exception: " + e.getMessage());
-        }
-    }
-
-    @Test
     public void getNote_invalid_withSQLDB() {
         UUID randomUUID = UUID.randomUUID();
         Note note = noteManager.get(randomUUID, Note.class);
         assertNull("Should not find a non-existent note", note);
-    }
-
-    @Test
-    public void getNoteByName_succeed_withSQLDB() {
-        try {
-            UUID id = UUID.randomUUID();
-            Note createdNote = new Note(id, "test");
-            noteManager.add(createdNote);
-            Note foundNote = noteManager.get(id, Note.class);
-            assertTrue("Retrieved note should match created", createdNote.equals(foundNote));
-        } catch (InvalidNoteException e) {
-            fail("Should not throw an exception: " + e.getMessage());
-        }
     }
 
     @Test

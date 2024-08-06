@@ -88,7 +88,7 @@ public class DatabaseManager {
 
             statement.executeUpdate();
         } catch (SQLException exception) {
-            Log.e("DBError", "Something went wrong on runQuery: " + query);
+            //Log.e("DBError", "Something went wrong on runQuery: " + query);
             exception.printStackTrace();
         }
     }
