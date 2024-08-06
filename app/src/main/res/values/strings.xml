@@ -32,4 +32,7 @@
     <string name="remove">Remove</string>
     <string name="last_updated">Last Updated</string>
     <string name="link_to_task">Link to Task</string>
+    <string name="pomodoro_timer">Pomodoro Timer</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>
