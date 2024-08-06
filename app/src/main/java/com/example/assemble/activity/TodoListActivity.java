@@ -21,13 +21,15 @@ public class TodoListActivity extends AppCompatActivity {
     private TodoListAdapter adapter;
     private List<Task> tasks;
 
-    String ownerUUID = SessionManager.getInstance().getCurrentUserID().toString();
+    String ownerUUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
 
+        //if null, set to default owner
+        ownerUUID = SessionManager.getInstance().getCurrentUserID() == null ? SessionManager.getInstance().getDefaultOwnerID().toString() : SessionManager.getInstance().getCurrentUserID().toString();
         recyclerView = findViewById(R.id.recyclerViewTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         tasks = TaskManager.getInstance(this).getAllTasks(ownerUUID);
